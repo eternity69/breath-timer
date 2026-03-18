@@ -108,7 +108,7 @@ body{
 }
 .flower{
   position:relative;width:130px;height:130px;
-  transition:transform 4s cubic-bezier(0.5,0,0.5,1);
+  transition:transform var(--breath-duration,4s) cubic-bezier(0.5,0,0.5,1);
   transform:scale(0.6) rotate(0deg);
 }
 .flower.inhale{transform:scale(1) rotate(60deg)}
@@ -118,7 +118,7 @@ body{
 .petal{
   position:absolute;width:130px;height:130px;border-radius:50%;
   mix-blend-mode:screen;-webkit-mix-blend-mode:screen;opacity:0.7;
-  transition:transform 4s cubic-bezier(0.5,0,0.5,1),background-color 1s;
+  transition:transform var(--breath-duration,4s) cubic-bezier(0.5,0,0.5,1),background-color 1s;
 }
 .petal:nth-child(odd){background:rgba(255,160,60,0.6)}
 .petal:nth-child(even){background:rgba(220,100,20,0.6)}
@@ -371,6 +371,22 @@ function applyTheme(phase) {
   document.body.style.backgroundColor = c.bg;
   
   if (timerScreen.style.display !== 'none') {
+    // Sync flower animation duration with current breath phase
+    const p = currentSequence[currentIndex];
+    if (p && p.animation) {
+      const a = p.animation;
+      let dur = 4; // default
+      if (phase === 'inhale') {
+        dur = a.inhale || (a.inhalePart ? a.inhalePart * (a.inhaleCount||4) : 4);
+        if (a.beats) dur = a.beats.filter(b=>b.scale==='inhale').reduce((s,b)=>s+b.duration,0) || 2;
+      } else if (phase === 'exhale') {
+        dur = a.exhale || 4;
+        if (a.beats) dur = a.beats.filter(b=>b.scale==='exhale').reduce((s,b)=>s+b.duration,0) || 2;
+      } else if (phase === 'hold') {
+        dur = a.hold || 4;
+      }
+      flower.style.setProperty('--breath-duration', dur + 's');
+    }
     // Update flower class for animation
     flower.className = 'flower ' + phase;
     // Update petal colors based on phase
