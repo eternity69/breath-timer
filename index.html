@@ -117,7 +117,7 @@ body{
 .flower.idle{transform:scale(0.75) rotate(30deg)}
 .petal{
   position:absolute;width:130px;height:130px;border-radius:50%;
-  mix-blend-mode:screen;opacity:0.7;
+  mix-blend-mode:screen;-webkit-mix-blend-mode:screen;opacity:0.7;
   transition:transform 4s cubic-bezier(0.5,0,0.5,1),background-color 1s;
 }
 .petal:nth-child(odd){background:rgba(255,160,60,0.6)}
@@ -616,15 +616,11 @@ function setRingsScale(scale) {
 
 function setRingsTransition(dur) {
   const t = `transform ${dur}s cubic-bezier(0.4,0,0.2,1)`;
-  // Apple-style: transitions handled by CSS classes
-  ring4.style.transition = `${t}, background-color 1s`;
+  // Apple-style: all transitions handled by CSS classes on .flower
 }
 
 function setRingsNoTransition() {
-  ring1.style.transition = 'background-color 1s';
-  ring2.style.transition = 'background-color 1s';
-  ring3.style.transition = 'background-color 1s';
-  ring4.style.transition = 'background-color 1s';
+  // Apple-style: no manual ring transitions needed
 }
 
 function resetCircles(){
