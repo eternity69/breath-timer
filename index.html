@@ -291,28 +291,25 @@ body{
 
 <script>
 // ===== PRACTICES DATA =====
+// Программа 1: «Прана + Мужская сила» — 40 дней без изменений
 const ALL_PRACTICES = [
-  {id:0,name:"Джала Нети",duration:300,body:"Тело 8 ⭐",hint:"Промывание носа солёной водой. Наклони голову, дыши ртом.",animation:null},
-  {id:1,name:"Adi Mantra ONG NAMO",duration:180,body:"Тело 8 ⭐",hint:"Пой ONG NAMO GURU DEV NAMO. Настройка на практику.",animation:null},
-  {id:2,name:"Полное йоговское дыхание",duration:300,body:"Тело 2",hint:"Вдох: живот → рёбра → грудь. Выдох обратно.",animation:{type:"simple",inhale:7.5,exhale:7.5}},
-  {id:3,name:"Нади Шодхана 4:4:4",duration:300,body:"Тело 2",hint:"Попеременное дыхание через ноздри. Баланс каналов.",animation:{type:"hold",inhale:4,hold:4,exhale:4}},
-  {id:4,name:"8-Stroke Breath",duration:180,body:"Тело 7",hint:"Вдох в 8 коротких частей через нос, выдох одним потоком.",animation:{type:"multipart",inhaleCount:8,inhalePart:0.5,exhale:2}},
-  {id:5,name:"Уджайи 1:2",duration:300,body:"Тело 2",hint:"Дыхание океана. Сужение горла. Вдох 4с, выдох 8с.",animation:{type:"simple",inhale:4,exhale:8}},
-  {id:6,name:"Sat Kriya SAT NAM",duration:180,body:"Тело 9",hint:"SAT — втяни пупок. NAM — отпусти. Ритм 1с+1с.",animation:{type:"mantra",beats:[{label:"SAT",duration:1,scale:"inhale"},{label:"NAM",duration:1,scale:"exhale"}]}},
-  {id:7,name:"One-Minute Breath",duration:180,body:"Тело 7",hint:"Вдох 20с → Задержка 20с → Выдох 20с. Глубокое замедление.",animation:{type:"hold",inhale:20,hold:20,exhale:20}},
-  {id:8,name:"Дыхание Огня",duration:180,body:"Тело 9",hint:"Быстрые ритмичные выдохи через нос. Пупок пульсирует.",animation:{type:"fire"}},
-  {id:9,name:"Помпа пупка",duration:120,body:"Тело 9",hint:"Вдох — расслабь живот. Резкий выдох — пупок к позвоночнику.",animation:null},
-  {id:10,name:"Ситали",duration:120,body:"Тело 2",hint:"Вдох через свёрнутый язык (рот). Выдох через нос.",animation:{type:"simple",inhale:4,exhale:4,inhaleLabel:"ВДОХ РТОМ",exhaleLabel:"ВЫДОХ НОСОМ"}},
-  {id:11,name:"Энергодыхание Окно",duration:180,body:"Тело 7",hint:"Визуализируй поток энергии. Свободное глубокое дыхание.",animation:null},
-  {id:12,name:"SO HUNG",duration:180,body:"Тело 8 ⭐",hint:"SO на вдохе (4 части). HUNG на выдохе (4 части).",animation:{type:"mantraMulti",inhaleMantra:"SO",exhaleMantra:"HUNG",parts:4,partDuration:1}},
-  {id:13,name:"Дыхание 4:1",duration:180,body:"Тело 7",hint:"Вдох в 4 части через нос. Выдох одним потоком.",animation:{type:"multipart",inhaleCount:4,inhalePart:1,exhale:2}},
-  {id:14,name:"Левая ноздря",duration:120,body:"Тело 2",hint:"Закрой правую ноздрю. Дыши только левой. Успокоение.",animation:{type:"simple",inhale:5,exhale:5}},
-  {id:15,name:"Сублимация",duration:120,body:"Тело 9",hint:"Направь энергию вверх по позвоночнику. Глубокое дыхание.",animation:null},
-  {id:16,name:"Шавасана",duration:420,body:"Тело 7",hint:"Полное расслабление. Лёжа на спине. Отпусти всё.",animation:null},
-  {id:17,name:"SAT NAM завершение",duration:180,body:"Тело 8 ⭐",hint:"Глубокий вдох → длинное SAT... короткое NAM. Закрытие.",animation:{type:"mantra",beats:[{label:"SAT",duration:6,scale:"inhale"},{label:"NAM",duration:1,scale:"exhale"},{label:"...",duration:1,scale:"exhale"}]}}
+  {id:0,name:"Adi Mantra",duration:180,body:"Вход",hint:"Пой ONG NAMO GURU DEV NAMO 3 раза. Руки в намасте. Глаза закрыты, точка между бровей.",animation:null},
+  {id:1,name:"Полное йоговское дыхание",duration:660,body:"Тело 8 ⭐",hint:"Вдох: живот → рёбра → грудь. Выдох обратно. 4 вдоха в минуту.",animation:{type:"simple",inhale:7.5,exhale:7.5}},
+  {id:2,name:"Нади Шодхана",duration:660,body:"Тело 8+9",hint:"Попеременное дыхание. Правая ноздря закрыта → вдох левой 4с → задержка 4с → выдох правой 4с.",animation:{type:"hold",inhale:4,hold:4,exhale:4}},
+  {id:3,name:"Sat Kriya",duration:420,body:"Тело 8 ⭐",hint:"Руки вверх, ладони вместе. SAT — втяни пупок резко. NAM — отпусти. Ритм 1с+1с. Ojas вверх.",animation:{type:"mantra",beats:[{label:"SAT",duration:1,scale:"inhale"},{label:"NAM",duration:1,scale:"exhale"}]}},
+  {id:4,name:"SO HUNG",duration:420,body:"Тело 2",hint:"Ноги вытянуты, отклонись назад. Гьян Мудра. Вдох 4 части: SO-SO-SO-SO. Выдох 4 части: HUNG-HUNG-HUNG-HUNG.",animation:{type:"mantraMulti",inhaleMantra:"SO",exhaleMantra:"HUNG",parts:4,partDuration:1}},
+  {id:5,name:"Дыхание 4:1",duration:420,body:"Тело 7",hint:"Вдох в 4 равные части через нос (руки поднимаются). Выдох одним потоком (руки вниз). Расширяет ауру.",animation:{type:"multipart",inhaleCount:4,inhalePart:1,exhale:2}},
+  {id:6,name:"Шавасана",duration:660,body:"Интеграция",hint:"Лечь на спину. Ноги шире таза. Руки ладонями вверх. Отпусти дыхание. Отпусти всё.",animation:null}
 ];
 
-const EVENING_INDICES = [2,5,14,16];
+// Вечер: левая ноздря + Белый Лебедь + расслабление
+const EVENING_PRACTICES = [
+  {id:10,name:"Левая ноздря",duration:180,body:"Тело 9",hint:"Закрой правую ноздрю. Дыши только левой. Медленно, глубоко. Активация Иды.",animation:{type:"simple",inhale:5,exhale:5}},
+  {id:11,name:"Медитация Белого Лебедя",duration:420,body:"Тело 9",hint:"Руки-лебедь перед глазами. Смотри на большие пальцы → закрой глаза, продолжай видеть. SAT на вдохе, NAM на выдохе.",animation:{type:"mantra",beats:[{label:"SAT",duration:4,scale:"inhale"},{label:"NAM",duration:4,scale:"exhale"}]}},
+  {id:12,name:"Расслабление",duration:300,body:"Тело 9",hint:"Отпусти всё. Можно сразу в сон.",animation:null}
+];
+
+const EVENING_INDICES = null; // не используем старый формат
 
 // ===== COLOR THEMES =====
 const COLORS = {
@@ -409,11 +406,20 @@ function showPracticeSelect(){
   document.body.style.backgroundColor = COLORS.menu.bg;
   const list=document.getElementById('practice-list');
   list.innerHTML='';
-  ALL_PRACTICES.forEach((p,i)=>{
+  const allPractices = [...ALL_PRACTICES, ...EVENING_PRACTICES];
+  allPractices.forEach((p,i)=>{
     const el=document.createElement('div');
     el.className='practice-item';
     el.innerHTML=`<span class="p-name">${p.name}</span><span class="p-time">${formatTime(p.duration)}</span>`;
-    el.onclick=()=>startSingle(i);
+    el.onclick=()=>{
+      currentSequence=[{...p}];
+      currentIndex=0;
+      startTime=Date.now();
+      hideAll();
+      timerScreen.style.display='flex';
+      acquireWakeLock();
+      loadPractice();
+    };
     list.appendChild(el);
   });
 }
@@ -423,7 +429,7 @@ function startSequence(type){
   if(type==='morning'){
     currentSequence=[...ALL_PRACTICES];
   } else {
-    currentSequence=EVENING_INDICES.map(i=>({...ALL_PRACTICES[i]}));
+    currentSequence=[...EVENING_PRACTICES];
   }
   currentIndex=0;
   startTime=Date.now();
