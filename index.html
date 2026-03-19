@@ -141,25 +141,27 @@ body{
   letter-spacing:3px;margin-bottom:16px;
   transition:color 0.8s;
 }
-.controls{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:14px}
+.controls{display:flex;align-items:center;justify-content:center;gap:28px;margin-bottom:14px}
 .ctrl-btn{
-  width:44px;height:44px;border-radius:50%;border:none;
-  background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);
-  font-size:1.1em;cursor:pointer;
+  width:52px;height:52px;border-radius:50%;border:none;
+  background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.85);
+  font-size:0;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  transition:all .2s,background-color 0.8s,color 0.8s;
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  transition:all .25s cubic-bezier(0.4,0,0.2,1),background-color 0.8s,color 0.8s;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  -webkit-tap-highlight-color:transparent;
 }
-.ctrl-btn:active{transform:scale(0.88);opacity:0.7}
+.ctrl-btn svg{width:22px;height:22px;fill:currentColor}
+.ctrl-btn:active{transform:scale(0.85);opacity:0.6}
 .ctrl-btn.main-btn{
-  width:64px;height:64px;
-  background:rgba(255,255,255,0.95);color:#333;
-  font-size:1.5em;
-  box-shadow:0 2px 20px rgba(0,0,0,0.15);
+  width:72px;height:72px;
+  background:rgba(255,255,255,0.95);color:#222;
+  box-shadow:0 4px 30px rgba(0,0,0,0.2),0 0 0 1px rgba(255,255,255,0.1);
 }
-.ctrl-btn.main-btn:active{transform:scale(0.9)}
-.ctrl-btn.dark-bg{background:rgba(0,0,0,0.1);color:rgba(60,50,40,0.6)}
-.ctrl-btn.main-btn.dark-bg{background:rgba(255,255,255,0.95);color:#333}
+.ctrl-btn.main-btn svg{width:28px;height:28px}
+.ctrl-btn.main-btn:active{transform:scale(0.88)}
+.ctrl-btn.dark-bg{background:rgba(0,0,0,0.08);color:rgba(60,50,40,0.5)}
+.ctrl-btn.main-btn.dark-bg{background:rgba(60,50,40,0.85);color:#F5F0E8;box-shadow:0 4px 30px rgba(0,0,0,0.1)}
 
 .progress-bar-container{
   width:100%;height:3px;
@@ -271,9 +273,9 @@ body{
   <div class="bottom-section">
     <div class="time-display" id="time-display">00:00</div>
     <div class="controls">
-      <button class="ctrl-btn" id="btn-reset" onclick="resetAll()" title="Сначала">🔄</button>
-      <button class="ctrl-btn main-btn" id="play-btn" onclick="togglePlay()">▶</button>
-      <button class="ctrl-btn" id="btn-skip" onclick="skipPractice()" title="Пропустить">⏭</button>
+      <button class="ctrl-btn" id="btn-reset" onclick="resetAll()" title="Сначала"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.96 7.96 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+      <button class="ctrl-btn main-btn" id="play-btn" onclick="togglePlay()"><svg viewBox="0 0 24 24" id="play-icon"><polygon points="8,5 19,12 8,19"/></svg></button>
+      <button class="ctrl-btn" id="btn-skip" onclick="skipPractice()" title="Пропустить"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/></svg></button>
     </div>
     <div class="progress-bar-container" id="progress-bar-container">
       <div class="progress-bar" id="progress-bar" style="width:0%"></div>
@@ -488,7 +490,7 @@ function togglePlay(){
 
 function startTimer(){
   isRunning=true;
-  document.getElementById('play-btn').textContent='⏸';
+  document.getElementById('play-icon').innerHTML='<rect x="7" y="5" width="3" height="14"/><rect x="14" y="5" width="3" height="14"/>';
   requestWakeLock();
   requestFullscreen();
   lastTick=Date.now();
@@ -513,7 +515,7 @@ function tick(){
 
 function pauseTimer(){
   isRunning=false;
-  document.getElementById('play-btn').textContent='▶';
+  document.getElementById('play-icon').innerHTML='<polygon points="8,5 19,12 8,19"/>';
   clearInterval(timerInterval);
   stopAnimation();
   applyTheme('pause');
@@ -521,7 +523,7 @@ function pauseTimer(){
 
 function stopTimer(){
   isRunning=false;
-  document.getElementById('play-btn').textContent='▶';
+  document.getElementById('play-icon').innerHTML='<polygon points="8,5 19,12 8,19"/>';
   clearInterval(timerInterval);
   stopAnimation();
 }
