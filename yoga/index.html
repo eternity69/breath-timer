@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a2e1f">
+<title>🧘 Yoga Timer</title>
+<meta property="og:title" content="Yoga Timer — Хатха-йога таймер">
+<meta property="og:description" content="PWA-таймер для практики хатха-йоги. 21 асана, 60 минут утренней практики.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'><rect width='1200' height='630' fill='%231a2e1f'/><text x='600' y='350' font-size='200' text-anchor='middle'>🧘</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧘</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIj4KPHJlY3Qgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxODAiIHJ4PSIzNiIgZmlsbD0iIzFhMmUxZiIvPgo8dGV4dCB4PSI5MCIgeT0iMTMwIiBmb250LXNpemU9IjEyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFwcGxlIENvbG9yIEVtb2ppLFNlZ29lIFVJIEVtb2ppIj7wn6eYPC90ZXh0Pgo8L3N2Zz4=">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Yoga%20Timer%22%2C%22short_name%22%3A%22Yoga%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a2e1f%22%2C%22theme_color%22%3A%22%231a2e1f%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%253E%253Ctext%20y%3D'.9em'%20font-size%3D'90'%253E%25F0%259F%25A7%2598%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;overflow-x:hidden;touch-action:manipulation}
+body{
+  background:#1a2e1f;
+  color:#c8b89a;
+  font-family:Georgia,'Times New Roman',serif;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100vh;min-height:100dvh;
+  user-select:none;-webkit-user-select:none;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* ===== MENU ===== */
+#menu-screen{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:20px;width:100%;height:100%;padding:12px;
+  position:absolute;top:0;left:0;z-index:10;
+}
+#menu-screen h1{
+  font-family:Georgia,serif;
+  font-size:clamp(2em,7vw,2.8em);font-weight:400;
+  color:rgba(200,184,154,0.95);
+  text-align:center;letter-spacing:0.03em;
+}
+#menu-screen .subtitle{
+  color:rgba(200,184,154,0.4);font-size:clamp(0.85em,3vw,1em);
+  font-style:italic;margin-bottom:8px;
+}
+.menu-btn{
+  width:min(92%,400px);padding:18px 20px;
+  border:1px solid rgba(200,184,154,0.12);border-radius:18px;
+  background:rgba(200,184,154,0.06);
+  color:rgba(200,184,154,0.9);font-family:Georgia,serif;font-size:clamp(0.95em,3.5vw,1.1em);
+  cursor:pointer;transition:all .3s;text-align:left;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.menu-btn:active{background:rgba(200,184,154,0.14);transform:scale(1.02)}
+.menu-btn .btn-title{font-size:1.1em;font-weight:400;margin-bottom:3px}
+.menu-btn .btn-desc{font-size:0.78em;color:rgba(200,184,154,0.4);font-style:italic}
+
+/* ===== ASANA SELECT ===== */
+#asana-select{
+  display:none;flex-direction:column;align-items:center;
+  width:100%;height:100%;padding:12px;
+  position:absolute;top:0;left:0;z-index:10;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+#asana-select h2{
+  font-family:Georgia,serif;font-size:clamp(1.2em,4vw,1.5em);font-weight:400;
+  color:rgba(200,184,154,0.85);margin-bottom:12px;margin-top:8px;
+}
+.asana-list{
+  width:min(95%,420px);display:flex;flex-direction:column;gap:0;padding-bottom:30px;
+}
+.asana-item{
+  padding:12px 16px;border:none;border-bottom:1px solid rgba(200,184,154,0.08);
+  background:transparent;cursor:pointer;transition:all .2s;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:Georgia,serif;
+}
+.asana-item:active{background:rgba(200,184,154,0.08)}
+.asana-item .a-num{font-size:0.8em;color:rgba(200,184,154,0.3);min-width:24px}
+.asana-item .a-name{flex:1;font-size:clamp(0.9em,3vw,1em);color:rgba(200,184,154,0.85);padding:0 8px}
+.asana-item .a-time{font-size:0.82em;color:rgba(200,184,154,0.35)}
+.back-btn{
+  padding:10px 24px;border:1px solid rgba(200,184,154,0.15);border-radius:24px;
+  background:transparent;color:rgba(200,184,154,0.6);
+  font-family:Georgia,serif;font-size:0.95em;cursor:pointer;margin-bottom:8px;
+}
+
+/* ===== TIMER ===== */
+#timer-screen{
+  display:none;flex-direction:column;align-items:center;justify-content:space-between;
+  width:100%;height:100%;padding:12px 12px 10px;
+  position:absolute;top:0;left:0;
+}
+.top-section{text-align:center;width:100%;flex-shrink:0;padding-top:6px}
+.asana-number{
+  display:inline-block;padding:3px 12px;border-radius:20px;
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:0.7em;
+  background:rgba(200,184,154,0.1);color:rgba(200,184,154,0.5);
+  margin-bottom:4px;
+}
+.asana-name{
+  font-family:Georgia,serif;
+  font-size:clamp(1.3em,5vw,1.8em);font-weight:400;
+  color:rgba(200,184,154,0.95);line-height:1.3;min-height:1.5em;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 8px;
+}
+.asana-hint{
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:clamp(0.7em,2.5vw,0.8em);color:rgba(200,184,154,0.4);
+  margin-top:6px;min-height:1.2em;padding:0 16px;
+  line-height:1.4;
+}
+
+/* ===== SVG RING ===== */
+.ring-container{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  flex:1;width:100%;max-height:55vh;
+}
+.ring-bg{
+  position:absolute;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+}
+/* Decorative concentric rings */
+.deco-ring{
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(200,184,154,0.06);
+}
+.deco-ring-1{width:clamp(260px,70vw,340px);height:clamp(260px,70vw,340px)}
+.deco-ring-2{width:clamp(220px,58vw,290px);height:clamp(220px,58vw,290px)}
+.deco-ring-3{width:clamp(180px,46vw,240px);height:clamp(180px,46vw,240px)}
+
+.progress-ring-svg{
+  position:relative;z-index:5;
+  width:clamp(200px,52vw,280px);height:clamp(200px,52vw,280px);
+  transform:rotate(-90deg);
+}
+.ring-track{
+  fill:none;stroke:rgba(200,184,154,0.08);
+  stroke-width:4;
+}
+.ring-progress{
+  fill:none;stroke:rgba(200,184,154,0.5);
+  stroke-width:4;stroke-linecap:round;
+  transition:stroke-dashoffset 0.3s linear;
+}
+.ring-glow{
+  fill:none;stroke:rgba(200,184,154,0.15);
+  stroke-width:10;stroke-linecap:round;
+  transition:stroke-dashoffset 0.3s linear;
+  filter:blur(4px);
+}
+
+.ring-time{
+  position:absolute;z-index:10;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.time-display{
+  font-family:Georgia,serif;
+  font-size:clamp(2.8em,10vw,3.8em);font-weight:400;
+  color:rgba(200,184,154,0.95);
+  font-variant-numeric:tabular-nums;letter-spacing:2px;
+}
+.time-total{
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:0.72em;color:rgba(200,184,154,0.25);margin-top:2px;
+}
+
+/* ===== CONTROLS ===== */
+.bottom-section{width:100%;text-align:center;flex-shrink:0}
+.controls{display:flex;align-items:center;justify-content:center;gap:clamp(20px,6vw,32px);margin-bottom:12px}
+.ctrl-btn{
+  width:50px;height:50px;border-radius:50%;border:none;
+  background:rgba(200,184,154,0.1);color:rgba(200,184,154,0.7);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  -webkit-tap-highlight-color:transparent;
+}
+.ctrl-btn svg{width:20px;height:20px;fill:currentColor}
+.ctrl-btn:active{transform:scale(0.85);opacity:0.5}
+.ctrl-btn.main-btn{
+  width:68px;height:68px;
+  background:rgba(200,184,154,0.85);color:#1a2e1f;
+  box-shadow:0 4px 24px rgba(0,0,0,0.3);
+}
+.ctrl-btn.main-btn svg{width:26px;height:26px}
+.ctrl-btn.main-btn:active{transform:scale(0.88)}
+
+.seq-progress{
+  width:100%;height:3px;background:rgba(200,184,154,0.08);
+  overflow:hidden;margin-bottom:4px;border-radius:2px;
+}
+.seq-progress-bar{
+  height:100%;background:rgba(200,184,154,0.35);
+  transition:width 0.5s ease;
+}
+.seq-progress-text{
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:0.7em;color:rgba(200,184,154,0.25);
+}
+
+/* ===== COMPLETE ===== */
+#complete-screen{
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;width:100%;height:100%;padding:12px;
+  position:absolute;top:0;left:0;z-index:10;
+}
+#complete-screen .complete-emoji{font-size:3.5em}
+#complete-screen h2{font-family:Georgia,serif;font-size:clamp(1.6em,5vw,2em);font-weight:400;color:rgba(200,184,154,0.9)}
+#complete-screen .complete-time{font-family:Georgia,serif;color:rgba(200,184,154,0.4);font-size:1em}
+
+/* ===== SHIMMER ANIMATION ===== */
+@keyframes shimmer{
+  0%,100%{opacity:0.06}
+  50%{opacity:0.12}
+}
+.deco-ring{animation:shimmer 4s ease-in-out infinite}
+.deco-ring-2{animation-delay:0.7s}
+.deco-ring-3{animation-delay:1.4s}
+
+/* ===== RESPONSIVE ===== */
+@media(min-height:750px){
+  .progress-ring-svg{width:clamp(240px,55vw,320px);height:clamp(240px,55vw,320px)}
+  .deco-ring-1{width:clamp(300px,75vw,380px);height:clamp(300px,75vw,380px)}
+  .deco-ring-2{width:clamp(260px,63vw,330px);height:clamp(260px,63vw,330px)}
+  .deco-ring-3{width:clamp(220px,51vw,280px);height:clamp(220px,51vw,280px)}
+}
+@media(max-height:600px){
+  .progress-ring-svg{width:180px;height:180px}
+  .deco-ring-1{width:220px;height:220px}
+  .deco-ring-2{width:190px;height:190px}
+  .deco-ring-3{width:160px;height:160px}
+  .time-display{font-size:2.4em}
+  .asana-name{font-size:1.2em}
+}
+</style>
+</head>
+<body>
+
+<!-- MENU -->
+<div id="menu-screen">
+  <h1>Yoga Timer</h1>
+  <div class="subtitle">хатха-йога практика</div>
+  <button class="menu-btn" onclick="startMorning()">
+    <div class="btn-title">☀️ Утро — 60 мин</div>
+    <div class="btn-desc">21 асана • полная последовательность</div>
+  </button>
+  <button class="menu-btn" onclick="showAsanaSelect()">
+    <div class="btn-title">🎯 Отдельная асана</div>
+    <div class="btn-desc">Выбери одну асану из списка</div>
+  </button>
+</div>
+
+<!-- ASANA SELECT -->
+<div id="asana-select">
+  <button class="back-btn" onclick="showMenu()">← Назад</button>
+  <h2>Выбери асану</h2>
+  <div class="asana-list" id="asana-list"></div>
+</div>
+
+<!-- TIMER -->
+<div id="timer-screen">
+  <div class="top-section">
+    <div class="asana-number" id="asana-number"></div>
+    <div class="asana-name" id="asana-name"></div>
+    <div class="asana-hint" id="asana-hint"></div>
+  </div>
+
+  <div class="ring-container">
+    <div class="ring-bg">
+      <div class="deco-ring deco-ring-1"></div>
+      <div class="deco-ring deco-ring-2"></div>
+      <div class="deco-ring deco-ring-3"></div>
+    </div>
+    <svg class="progress-ring-svg" viewBox="0 0 200 200" id="ring-svg">
+      <circle class="ring-track" cx="100" cy="100" r="90"/>
+      <circle class="ring-glow" cx="100" cy="100" r="90" id="ring-glow"
+        stroke-dasharray="565.49" stroke-dashoffset="565.49"/>
+      <circle class="ring-progress" cx="100" cy="100" r="90" id="ring-progress"
+        stroke-dasharray="565.49" stroke-dashoffset="565.49"/>
+    </svg>
+    <div class="ring-time">
+      <div class="time-display" id="time-display">00:00</div>
+      <div class="time-total" id="time-total"></div>
+    </div>
+  </div>
+
+  <div class="bottom-section">
+    <div class="controls">
+      <button class="ctrl-btn" id="btn-prev" onclick="prevAsana()" title="Назад">
+        <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+      </button>
+      <button class="ctrl-btn main-btn" id="play-btn" onclick="togglePlay()">
+        <svg viewBox="0 0 24 24" id="play-icon"><polygon points="9,5 20,12 9,19"/></svg>
+      </button>
+      <button class="ctrl-btn" id="btn-next" onclick="nextAsana()" title="Вперёд">
+        <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/></svg>
+      </button>
+    </div>
+    <div class="seq-progress">
+      <div class="seq-progress-bar" id="seq-progress-bar" style="width:0%"></div>
+    </div>
+    <div class="seq-progress-text" id="seq-progress-text"></div>
+  </div>
+</div>
+
+<!-- COMPLETE -->
+<div id="complete-screen">
+  <div class="complete-emoji">🙏</div>
+  <h2>Практика завершена</h2>
+  <div class="complete-time" id="complete-time"></div>
+  <button class="menu-btn" onclick="showMenu()" style="margin-top:16px;text-align:center">
+    <div class="btn-title">← В меню</div>
+  </button>
+</div>
+
+<script>
+// ===== ASANA DATA =====
+const ASANAS = [
+  {name:"Настройка / Сукхасана",duration:300,hint:"Сесть, закрыть глаза, 3-4 глубоких вдоха, намерение"},
+  {name:"Разминка головы и плеч",duration:120,hint:"Полукруги головой + круги плечами"},
+  {name:"Кошка-Корова",duration:120,hint:"Вдох-прогиб, выдох-округление. 8-10 циклов"},
+  {name:"Баласана",duration:30,hint:"Поза ребёнка. Лоб на пол, расслабить спину"},
+  {name:"Скрутка на четвереньках",duration:120,hint:"Правую руку под левую, лечь виском. По 1 мин на сторону"},
+  {name:"Собака мордой вниз",duration:60,hint:"Таз вверх, пятки к полу. Перевёрнутая V"},
+  {name:"Сурья Намаскар",duration:600,hint:"4-6 кругов. Первые 2 медленно, потом быстрее"},
+  {name:"Воин I",duration:120,hint:"Колено над лодыжкой 90°, руки вверх. По 1 мин на сторону"},
+  {name:"Воин II",duration:120,hint:"Раскрыть таз в сторону, руки параллельно полу. По 1 мин"},
+  {name:"Мирный воин",duration:60,hint:"Из Воина II, боковой прогиб назад. По 30с"},
+  {name:"Треугольник",duration:120,hint:"Обе ноги прямые, наклон к передней. По 1 мин"},
+  {name:"Полумесяц",duration:90,hint:"Баланс на одной ноге, тело в одной плоскости. По 45с"},
+  {name:"Собака мордой вниз",duration:30,hint:"Переход между сторонами"},
+  {name:"Дерево",duration:120,hint:"Стопу к бедру НЕ к колену. По 1 мин на сторону"},
+  {name:"Воин III",duration:90,hint:"Тело горизонтально, руки вперёд. По 45с"},
+  {name:"Наклон сидя",duration:90,hint:"Тянуться животом к бёдрам, не лбом к коленям"},
+  {name:"Голубь лёжа",duration:120,hint:"Лодыжка на бедро, подтянуть к себе. По 1 мин"},
+  {name:"Скрутка лёжа",duration:120,hint:"Колено через тело, оба плеча к полу. По 1 мин"},
+  {name:"Мост",duration:120,hint:"Таз вверх, грудь к подбородку. 2 подхода"},
+  {name:"Колени к груди",duration:30,hint:"Обхватить колени, покачаться"},
+  {name:"Шавасана",duration:300,hint:"Полное расслабление. Не пропускать!"}
+];
+
+// ===== STATE =====
+let sequence = [];
+let currentIdx = 0;
+let timeLeft = 0;
+let totalDuration = 0;
+let isRunning = false;
+let timerInterval = null;
+let wakeLock = null;
+let audioCtx = null;
+let sessionStart = 0;
+let lastTick = 0;
+
+// SVG ring constants
+const CIRCUMFERENCE = 2 * Math.PI * 90; // ~565.49
+
+// ===== ELEMENTS =====
+const $menuScreen = document.getElementById('menu-screen');
+const $asanaSelect = document.getElementById('asana-select');
+const $timerScreen = document.getElementById('timer-screen');
+const $completeScreen = document.getElementById('complete-screen');
+const $ringProgress = document.getElementById('ring-progress');
+const $ringGlow = document.getElementById('ring-glow');
+
+// ===== SCREENS =====
+function hideAll(){
+  $menuScreen.style.display='none';
+  $asanaSelect.style.display='none';
+  $timerScreen.style.display='none';
+  $completeScreen.style.display='none';
+}
+
+function showMenu(){
+  stopTimer();
+  releaseWakeLock();
+  hideAll();
+  $menuScreen.style.display='flex';
+}
+
+function showAsanaSelect(){
+  hideAll();
+  $asanaSelect.style.display='flex';
+  const list = document.getElementById('asana-list');
+  list.innerHTML = '';
+  ASANAS.forEach((a,i)=>{
+    const el = document.createElement('div');
+    el.className = 'asana-item';
+    el.innerHTML = `<span class="a-num">${i+1}</span><span class="a-name">${a.name}</span><span class="a-time">${fmtTime(a.duration)}</span>`;
+    el.onclick = ()=> startSingle(i);
+    list.appendChild(el);
+  });
+}
+
+// ===== START =====
+function startMorning(){
+  sequence = ASANAS.map(a=>({...a}));
+  currentIdx = 0;
+  sessionStart = Date.now();
+  hideAll();
+  $timerScreen.style.display='flex';
+  acquireWakeLock();
+  loadAsana(0);
+}
+
+function startSingle(idx){
+  sequence = [{...ASANAS[idx]}];
+  currentIdx = 0;
+  sessionStart = Date.now();
+  hideAll();
+  $timerScreen.style.display='flex';
+  acquireWakeLock();
+  loadAsana(0);
+}
+
+// ===== LOAD ASANA =====
+function loadAsana(idx){
+  if(idx >= sequence.length){
+    showComplete();
+    return;
+  }
+  currentIdx = idx;
+  const a = sequence[idx];
+  timeLeft = a.duration;
+  totalDuration = a.duration;
+
+  document.getElementById('asana-name').textContent = a.name;
+  document.getElementById('asana-hint').textContent = a.hint || '';
+  document.getElementById('asana-number').textContent = sequence.length > 1
+    ? `${idx+1} из ${sequence.length}`
+    : a.name;
+  document.getElementById('time-total').textContent = sequence.length > 1
+    ? `всего ${fmtTime(a.duration)}`
+    : '';
+
+  updateDisplay();
+  updateSeqProgress();
+  setRing(0);
+
+  if(idx > 0){
+    playGong();
+    vibrate();
+  }
+}
+
+// ===== TIMER =====
+function togglePlay(){
+  isRunning ? pauseTimer() : startTimer();
+}
+
+function startTimer(){
+  isRunning = true;
+  setPlayIcon(false);
+  acquireWakeLock();
+  lastTick = Date.now();
+  timerInterval = setInterval(tick, 50);
+}
+
+function pauseTimer(){
+  isRunning = false;
+  setPlayIcon(true);
+  clearInterval(timerInterval);
+}
+
+function stopTimer(){
+  isRunning = false;
+  setPlayIcon(true);
+  clearInterval(timerInterval);
+}
+
+function tick(){
+  const now = Date.now();
+  const delta = (now - lastTick) / 1000;
+  lastTick = now;
+  timeLeft -= delta;
+
+  if(timeLeft <= 0){
+    timeLeft = 0;
+    updateDisplay();
+    setRing(1);
+    autoNext();
+    return;
+  }
+  updateDisplay();
+
+  // Update ring progress
+  const elapsed = totalDuration - timeLeft;
+  const progress = elapsed / totalDuration;
+  setRing(progress);
+}
+
+function autoNext(){
+  stopTimer();
+  if(currentIdx + 1 >= sequence.length){
+    showComplete();
+  } else {
+    loadAsana(currentIdx + 1);
+    startTimer();
+  }
+}
+
+function nextAsana(){
+  stopTimer();
+  if(currentIdx + 1 >= sequence.length){
+    showComplete();
+  } else {
+    loadAsana(currentIdx + 1);
+    startTimer();
+  }
+}
+
+function prevAsana(){
+  if(currentIdx <= 0) return;
+  stopTimer();
+  loadAsana(currentIdx - 1);
+}
+
+// ===== RING =====
+function setRing(progress){
+  // progress: 0 = start, 1 = complete
+  const offset = CIRCUMFERENCE * (1 - progress);
+  $ringProgress.style.strokeDashoffset = offset;
+  $ringGlow.style.strokeDashoffset = offset;
+}
+
+// ===== DISPLAY =====
+function updateDisplay(){
+  document.getElementById('time-display').textContent = fmtTime(Math.ceil(timeLeft));
+}
+
+function updateSeqProgress(){
+  const total = sequence.length;
+  const pct = total > 0 ? (currentIdx / total) * 100 : 0;
+  document.getElementById('seq-progress-bar').style.width = pct + '%';
+  document.getElementById('seq-progress-text').textContent = sequence.length > 1
+    ? `${currentIdx + 1} / ${total}`
+    : '';
+}
+
+function setPlayIcon(showPlay){
+  document.getElementById('play-icon').innerHTML = showPlay
+    ? '<polygon points="9,5 20,12 9,19"/>'
+    : '<rect x="7" y="5" width="3.5" height="14" rx="1"/><rect x="13.5" y="5" width="3.5" height="14" rx="1"/>';
+}
+
+function fmtTime(s){
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+}
+
+// ===== COMPLETE =====
+function showComplete(){
+  stopTimer();
+  releaseWakeLock();
+  hideAll();
+  $completeScreen.style.display = 'flex';
+  const elapsed = Math.round((Date.now() - sessionStart) / 1000);
+  document.getElementById('complete-time').textContent = `Время: ${fmtTime(elapsed)}`;
+  playGong();
+  vibrate();
+}
+
+// ===== AUDIO =====
+function getAudioCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playGong(){
+  try{
+    const ctx = getAudioCtx();
+    if(ctx.state === 'suspended') ctx.resume();
+    const t = ctx.currentTime;
+
+    // Low fundamental
+    const o1 = ctx.createOscillator();
+    const g1 = ctx.createGain();
+    o1.type = 'sine'; o1.frequency.value = 174;
+    g1.gain.setValueAtTime(0.25, t);
+    g1.gain.exponentialRampToValueAtTime(0.001, t + 3.5);
+    o1.connect(g1); g1.connect(ctx.destination);
+    o1.start(t); o1.stop(t + 3.5);
+
+    // Mid harmonic
+    const o2 = ctx.createOscillator();
+    const g2 = ctx.createGain();
+    o2.type = 'sine'; o2.frequency.value = 348;
+    g2.gain.setValueAtTime(0.12, t);
+    g2.gain.exponentialRampToValueAtTime(0.001, t + 2.5);
+    o2.connect(g2); g2.connect(ctx.destination);
+    o2.start(t); o2.stop(t + 2.5);
+
+    // High shimmer
+    const o3 = ctx.createOscillator();
+    const g3 = ctx.createGain();
+    o3.type = 'sine'; o3.frequency.value = 528;
+    g3.gain.setValueAtTime(0.06, t);
+    g3.gain.exponentialRampToValueAtTime(0.001, t + 2);
+    o3.connect(g3); g3.connect(ctx.destination);
+    o3.start(t); o3.stop(t + 2);
+  }catch(e){}
+}
+
+function vibrate(){
+  try{ if(navigator.vibrate) navigator.vibrate([200,80,200]); }catch(e){}
+}
+
+// ===== WAKE LOCK =====
+async function acquireWakeLock(){
+  try{
+    if('wakeLock' in navigator){
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release',()=>{ wakeLock = null; });
+    }
+  }catch(e){}
+}
+
+function releaseWakeLock(){
+  try{ if(wakeLock){ wakeLock.release(); wakeLock = null; } }catch(e){}
+}
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState === 'visible' && isRunning) acquireWakeLock();
+});
+
+// ===== INIT =====
+showMenu();
+</script>
+</body>
+</html>
