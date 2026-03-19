@@ -7,7 +7,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#1a1a2e">
+<meta name="theme-color" content="#F5F0E8">
 <title>🌊 Breath</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
 <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Breath%20Timer%22%2C%22short_name%22%3A%22Breath%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a1a2e%22%2C%22theme_color%22%3A%22%231a1a2e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%253E%253Ctext%20y%3D'.9em'%20font-size%3D'90'%253E%25F0%259F%258C%25AC%25EF%25B8%258F%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
@@ -15,7 +15,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;overflow:hidden;touch-action:manipulation}
 body{
-  background:#1a1a2e;
+  background:#F5F0E8;
   color:#fff;
   font-family:Georgia,'Times New Roman',serif;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -37,7 +37,7 @@ body{
   color:rgba(255,255,255,0.9);
   text-align:center;letter-spacing:0.02em;
 }
-#menu-screen .subtitle{color:rgba(255,255,255,0.45);font-size:1em;font-style:italic;margin-bottom:8px}
+#menu-screen .subtitle{color:rgba(60,50,40,0.6);font-size:1em;font-style:italic;margin-bottom:8px}
 
 .menu-btn{
   width:min(88%,360px);padding:20px 24px;
@@ -47,9 +47,9 @@ body{
   cursor:pointer;transition:all .3s;text-align:left;
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
 }
-.menu-btn:active,.menu-btn:hover{background:rgba(255,255,255,0.12);transform:scale(1.02)}
+.menu-btn:active,.menu-btn:hover{background:rgba(60,50,40,0.12);transform:scale(1.02)}
 .menu-btn .btn-title{font-size:1.15em;font-weight:400;margin-bottom:4px}
-.menu-btn .btn-desc{font-size:0.8em;color:rgba(255,255,255,0.45);font-style:italic}
+.menu-btn .btn-desc{font-size:0.8em;color:rgba(60,50,40,0.5);font-style:italic}
 
 /* ===== PRACTICE SELECT ===== */
 #practice-select{
