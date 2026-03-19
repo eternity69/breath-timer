@@ -331,7 +331,7 @@ const COLORS = {
   hold:    { bg:'#F5F0E8', ring1:'rgba(190,173,145,0.20)', ring2:'rgba(180,163,135,0.28)', ring3:'rgba(170,153,125,0.37)', ring4:'rgba(160,143,115,0.47)', text:'#3c3228', dark:true },
   pause:   { bg:'#F5F0E8', ring1:'rgba(190,173,145,0.16)', ring2:'rgba(180,163,135,0.24)', ring3:'rgba(170,153,125,0.32)', ring4:'rgba(160,143,115,0.42)', text:'#3c3228', dark:true },
   idle:    { bg:'#E87420', ring1:'rgba(195,80,5,0.15)', ring2:'rgba(215,98,18,0.23)', ring3:'rgba(238,120,35,0.31)', ring4:'rgba(255,153,63,0.40)', text:'#fff', dark:false },
-  menu:    { bg:'#1a1a2e' }
+  menu:    { bg:'#F5F0E8' }
 };
 
 // ===== STATE =====
@@ -412,7 +412,7 @@ function showMenu(){
   hideAll();
   menuScreen.style.display='flex';
   document.body.style.backgroundColor = COLORS.menu.bg;
-  document.body.style.color = '#fff';
+  document.body.style.color = '#3c3228';
 }
 
 function showPracticeSelect(){
