@@ -235,8 +235,8 @@ body{
     <div class="btn-desc">8 практик • Прана + Мужская сила • 55 мин</div>
   </button>
   <button class="menu-btn" onclick="startSequence('evening')">
-    <div class="btn-title">🌙 Вечер — 15 мин</div>
-    <div class="btn-desc">Расслабление • Подготовка ко сну</div>
+    <div class="btn-title">🌙 Вечер — 30 мин</div>
+    <div class="btn-desc">Баланс • Глубокое дыхание • Медитация • Шавасана</div>
   </button>
   <button class="menu-btn" onclick="showPracticeSelect()">
     <div class="btn-title">🎯 Отдельная практика</div>
@@ -316,11 +316,16 @@ const ALL_PRACTICES = [
   {id:6,name:"Шавасана",duration:660,body:"Интеграция",hint:"Лечь на спину. Ноги шире таза. Руки ладонями вверх. Отпусти дыхание. Отпусти всё.",animation:null}
 ];
 
-// Вечер: левая ноздря + Белый Лебедь + расслабление
+// Вечер: 30-минутная программа восстановления
 const EVENING_PRACTICES = [
-  {id:10,name:"Левая ноздря",duration:180,body:"Тело 9",hint:"Закрой правую ноздрю. Дыши только левой. Медленно, глубоко. Активация Иды.",animation:{type:"simple",inhale:5,exhale:5}},
-  {id:11,name:"Медитация Белого Лебедя",duration:420,body:"Тело 9",hint:"Руки-лебедь перед глазами. Смотри на большие пальцы → закрой глаза, продолжай видеть. SAT на вдохе, NAM на выдохе.",animation:{type:"mantra",beats:[{label:"SAT",duration:4,scale:"inhale"},{label:"NAM",duration:4,scale:"exhale"}]}},
-  {id:12,name:"Расслабление",duration:300,body:"Тело 9",hint:"Отпусти всё. Можно сразу в сон.",animation:null}
+  {id:10,name:"Нади Шодхана",duration:300,body:"Тело 2 (Душа)",hint:"Попеременное дыхание. Балансировка после дня. Правая закрыта → вдох левой 4с → задержка 4с → выдох правой 4с. Меняй стороны.",animation:{type:"hold",inhale:4,hold:4,exhale:4}},
+  {id:910,name:"— Переход —",duration:30,body:"🔄",hint:"Свободное дыхание. Ложись на спину, расслабь руки.",animation:null},
+  {id:11,name:"Долгое глубокое дыхание",duration:600,body:"Тело 8 (Прана)",hint:"Лёжа на спине. Вдох: живот → рёбра → грудь, 8 сек. Выдох: обратно, 8 сек. Снимает напряжение от препаратов.",animation:{type:"simple",inhale:8,exhale:8}},
+  {id:911,name:"— Переход —",duration:30,body:"🔄",hint:"Продолжай лежать. Дыхание замедляется само.",animation:null},
+  {id:12,name:"Дыхание 4-7-8",duration:300,body:"Парасимпатика",hint:"Вдох через нос 4 сек → задержка 7 сек → выдох через рот 8 сек. Активирует парасимпатику, готовит ко сну.",animation:{type:"hold",inhale:4,hold:7,exhale:8}},
+  {id:912,name:"— Переход —",duration:30,body:"🔄",hint:"Отпусти контроль над дыханием. Просто наблюдай.",animation:null},
+  {id:13,name:"Медитация наблюдения",duration:300,body:"Тело 9 (Путь)",hint:"Наблюдай дыхание без контроля. Не управляй — просто смотри. Мысли приходят — отпускай. Тонкое тело активируется.",animation:null},
+  {id:14,name:"Шавасана",duration:300,body:"Интеграция",hint:"Полное расслабление. Визуализируй золотой свет, заполняющий тело с каждым вдохом. Можно сразу в сон.",animation:null}
 ];
 
 const EVENING_INDICES = null; // не используем старый формат
