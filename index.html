@@ -823,13 +823,14 @@ function initCanvas(){
 function resizeCanvas(){
   if(!canvasEl) return;
   const container = document.getElementById('circles-container');
-  const w = container.clientWidth, h = container.clientHeight;
+  let w = container.clientWidth || window.innerWidth;
+  let h = container.clientHeight || (window.innerHeight * 0.5);
   const dpr = window.devicePixelRatio || 1;
   canvasEl.width = w * dpr;
   canvasEl.height = h * dpr;
   canvasEl.style.width = w + 'px';
   canvasEl.style.height = h + 'px';
-  canvasCtx.setTransform(dpr,0,0,dpr,0,0);
+  if(canvasCtx) canvasCtx.setTransform(dpr,0,0,dpr,0,0);
 }
 window.addEventListener('resize', resizeCanvas);
 
@@ -1005,10 +1006,11 @@ function drawMandala(ctx, w, h, scale, phase, t){
 // --- Color helper ---
 function getPhaseColor(phase){
   // Returns rgba template with ALPHA placeholder
-  if(phase==='inhale') return 'rgba(232,116,32,ALPHA)';
-  if(phase==='exhale') return 'rgba(122,140,58,ALPHA)';
-  if(phase==='hold') return 'rgba(160,143,115,ALPHA)';
-  return 'rgba(160,143,115,ALPHA)'; // pause/idle
+  // Use WHITE on colored backgrounds for contrast
+  if(phase==='inhale') return 'rgba(255,255,255,ALPHA)';
+  if(phase==='exhale') return 'rgba(255,255,255,ALPHA)';
+  if(phase==='hold') return 'rgba(100,80,50,ALPHA)'; // dark on cream
+  return 'rgba(100,80,50,ALPHA)'; // dark on cream for pause
 }
 
 function renderCanvas(scale, phase, t){
