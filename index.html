@@ -495,7 +495,7 @@ function showPracticeSelect(){
   document.body.style.backgroundColor = COLORS.menu.bg;
   const list=document.getElementById('practice-list');
   list.innerHTML='';
-  const allPractices = [...ALL_PRACTICES, ...EVENING_PRACTICES, ...ENERGY_BASIC, ...ENERGY_7PHASE];
+  const allPractices = [...ALL_PRACTICES, ...EVENING_PRACTICES, ...ENERGY_BASIC, ...ENERGY_7PHASE].filter(p=>!p.name.includes('Пауза')&&!p.name.includes('Переход'));
   allPractices.forEach((p,i)=>{
     const el=document.createElement('div');
     el.className='practice-item';
