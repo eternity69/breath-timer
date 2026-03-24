@@ -238,6 +238,14 @@ body{
     <div class="btn-title">🌙 Вечер — 30 мин</div>
     <div class="btn-desc">Баланс • Глубокое дыхание • Медитация • Шавасана</div>
   </button>
+  <button class="menu-btn" onclick="startSequence('energy_basic')">
+    <div class="btn-title">🔥 Энергодыхание — 33 мин</div>
+    <div class="btn-desc">Карловский • 2 цикла связного дыхания + окна</div>
+  </button>
+  <button class="menu-btn" onclick="startSequence('energy_7phase')">
+    <div class="btn-title">⚡ 7 фаз Энергодыхания — 50 мин</div>
+    <div class="btn-desc">Карловский • 7 чакр • глубокая проработка</div>
+  </button>
   <button class="menu-btn" onclick="showPracticeSelect()">
     <div class="btn-title">🎯 Отдельная практика</div>
     <div class="btn-desc">Выбери одну практику</div>
@@ -329,6 +337,38 @@ const EVENING_PRACTICES = [
 ];
 
 const EVENING_INDICES = null; // не используем старый формат
+
+// Энергодыхание Карловского — Базовый (33 мин)
+// Связное дыхание (без пауз между вдохом/выдохом), нарастающий темп, «окна» расслабления
+const ENERGY_BASIC = [
+  {id:200,name:"Настройка",duration:60,body:"Подготовка",hint:"Ляг или сядь удобно. Закрой глаза. Несколько спокойных вдохов-выдохов. Почувствуй тело.",animation:null},
+  {id:201,name:"Связное дыхание — разогрев",duration:300,body:"Фаза 1",hint:"Связное дыхание: без пауз между вдохом и выдохом. Начни медленно. Вдох носом → выдох ртом. Плавно ускоряйся.",animation:{type:"simple",inhale:4,exhale:3}},
+  {id:202,name:"Активная фаза 1",duration:360,body:"Фаза 2",hint:"Ускоряй ритм! Дыхание связное, мощное. Вдох глубокий, выдох активный. Тело может покалывать — это нормально. Дыши!",animation:{type:"simple",inhale:3,exhale:2}},
+  {id:203,name:"Окно — расслабление",duration:300,body:"Окно 🪟",hint:"Дыши НОСОМ, медленно и глубоко. Полностью расслабь тело. Наблюдай ощущения. Энергия интегрируется.",animation:{type:"simple",inhale:6,exhale:8}},
+  {id:204,name:"Активная фаза 2",duration:420,body:"Фаза 3",hint:"Снова связное дыхание! Глубже, мощнее. Ты знаешь ритм. Отпусти контроль — пусть тело дышит само.",animation:{type:"simple",inhale:2.5,exhale:2}},
+  {id:205,name:"Окно — глубокий отдых",duration:300,body:"Окно 🪟",hint:"Медленное носовое дыхание. Всё тело расслаблено. Наблюдай потоки энергии. Не торопись.",animation:{type:"simple",inhale:7,exhale:9}},
+  {id:206,name:"Интеграция",duration:300,body:"Шавасана",hint:"Полное расслабление. Дыхание свободное, естественное. Позволь телу впитать всё, что произошло. 🙏",animation:null}
+];
+
+// 7-фазное Энергодыхание (50 мин) — работа с 7 чакрами
+const ENERGY_7PHASE = [
+  {id:300,name:"Настройка",duration:60,body:"Подготовка",hint:"Ляг удобно. Закрой глаза. Направь внимание внутрь. Намерение на практику.",animation:null},
+  {id:301,name:"Муладхара — Корень",duration:240,body:"Чакра 1 🔴",hint:"Связное дыхание. Фокус на основании позвоночника. Ощути опору, землю, безопасность. Вдох носом — выдох ртом.",animation:{type:"simple",inhale:3.5,exhale:2.5}},
+  {id:302,name:"Окно",duration:120,body:"Окно 🪟",hint:"Медленно, носом. Ощути тепло в основании позвоночника.",animation:{type:"simple",inhale:6,exhale:8}},
+  {id:303,name:"Свадхистхана — Творчество",duration:240,body:"Чакра 2 🟠",hint:"Связное дыхание. Фокус на область ниже пупка. Творчество, эмоции, текучесть. Ритм нарастает.",animation:{type:"simple",inhale:3,exhale:2.5}},
+  {id:304,name:"Окно",duration:120,body:"Окно 🪟",hint:"Расслабление. Наблюдай ощущения в нижней части живота.",animation:{type:"simple",inhale:6,exhale:8}},
+  {id:305,name:"Манипура — Сила",duration:240,body:"Чакра 3 🟡",hint:"Связное дыхание. Фокус на солнечное сплетение. Огонь, воля, действие. Дыши мощно!",animation:{type:"simple",inhale:2.5,exhale:2}},
+  {id:306,name:"Окно",duration:120,body:"Окно 🪟",hint:"Расслабление. Ощути жар в солнечном сплетении.",animation:{type:"simple",inhale:6,exhale:8}},
+  {id:307,name:"Анахата — Сердце",duration:240,body:"Чакра 4 💚",hint:"Связное дыхание. Фокус на центр груди. Любовь, принятие, благодарность. Дыши сердцем.",animation:{type:"simple",inhale:3,exhale:2.5}},
+  {id:308,name:"Окно",duration:120,body:"Окно 🪟",hint:"Расслабление. Ощути расширение в груди. Тепло сердца.",animation:{type:"simple",inhale:6,exhale:8}},
+  {id:309,name:"Вишуддха — Голос",duration:240,body:"Чакра 5 🔵",hint:"Связное дыхание. Фокус на горло. Правда, самовыражение. Можно издавать звук на выдохе.",animation:{type:"simple",inhale:3,exhale:2.5}},
+  {id:310,name:"Окно",duration:120,body:"Окно 🪟",hint:"Расслабление. Ощути вибрацию в горле.",animation:{type:"simple",inhale:6,exhale:8}},
+  {id:311,name:"Аджна — Третий глаз",duration:240,body:"Чакра 6 🟣",hint:"Связное дыхание. Фокус между бровей. Интуиция, ясность, видение. Глаза вверх за закрытыми веками.",animation:{type:"simple",inhale:3,exhale:2.5}},
+  {id:312,name:"Окно",duration:120,body:"Окно 🪟",hint:"Расслабление. Наблюдай внутренний свет.",animation:{type:"simple",inhale:6,exhale:8}},
+  {id:313,name:"Сахасрара — Корона",duration:240,body:"Чакра 7 ⚪",hint:"Связное дыхание. Фокус на макушку. Связь с высшим. Самая мощная фаза — отдайся полностью.",animation:{type:"simple",inhale:2.5,exhale:2}},
+  {id:314,name:"Финальное окно",duration:180,body:"Окно 🪟",hint:"Глубокое расслабление. Все 7 центров активированы. Ощути единый поток от корня до макушки.",animation:{type:"simple",inhale:7,exhale:9}},
+  {id:315,name:"Интеграция",duration:300,body:"Шавасана",hint:"Полное расслабление. Дыхание свободное. Тело интегрирует энергию всех 7 центров. 🙏",animation:null}
+];
 
 // ===== COLOR THEMES =====
 const COLORS = {
@@ -427,7 +467,7 @@ function showPracticeSelect(){
   document.body.style.backgroundColor = COLORS.menu.bg;
   const list=document.getElementById('practice-list');
   list.innerHTML='';
-  const allPractices = [...ALL_PRACTICES, ...EVENING_PRACTICES];
+  const allPractices = [...ALL_PRACTICES, ...EVENING_PRACTICES, ...ENERGY_BASIC, ...ENERGY_7PHASE];
   allPractices.forEach((p,i)=>{
     const el=document.createElement('div');
     el.className='practice-item';
@@ -449,6 +489,10 @@ function showPracticeSelect(){
 function startSequence(type){
   if(type==='morning'){
     currentSequence=[...ALL_PRACTICES];
+  } else if(type==='energy_basic'){
+    currentSequence=[...ENERGY_BASIC];
+  } else if(type==='energy_7phase'){
+    currentSequence=[...ENERGY_7PHASE];
   } else {
     currentSequence=[...EVENING_PRACTICES];
   }
