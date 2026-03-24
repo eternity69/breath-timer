@@ -249,6 +249,22 @@ body{
     <div class="btn-title">⚡ Энергодыхание по чакрам — 50 мин</div>
     <div class="btn-desc">Карловский • 7 чакр • глубокая проработка</div>
   </button>
+  <button class="menu-btn" onclick="startSequence('prana_restore')">
+    <div class="btn-title">🌬️ Пранаяма Восстановления — 31 мин</div>
+    <div class="btn-desc">8-дольное дыхание → Ситали → Со Хунг → Шавасана</div>
+  </button>
+  <button class="menu-btn" onclick="startSequence('sat_kriya_full')">
+    <div class="btn-title">💪 Sat Kriya — 31 мин</div>
+    <div class="btn-desc">Йоги Бхаджан • Сублимация • Мужская сила</div>
+  </button>
+  <button class="menu-btn" onclick="startSequence('nadi_fire')">
+    <div class="btn-title">🐍 Нади + Бхастрика — 30 мин</div>
+    <div class="btn-desc">Очищение каналов → Огонь → Бхрамари → Шавасана</div>
+  </button>
+  <button class="menu-btn" onclick="startSequence('strokes')">
+    <div class="btn-title">🎵 Дыхание в долях — 33 мин</div>
+    <div class="btn-desc">Йоги Бхаджан • 4-8-12 долей • уникальная техника</div>
+  </button>
   <button class="menu-btn" onclick="showPracticeSelect()">
     <div class="btn-title">🎯 Отдельная практика</div>
     <div class="btn-desc">Выбери одну практику</div>
@@ -399,6 +415,56 @@ const ENERGY_7PHASE = [
   {id:322,name:"Интеграция",duration:300,body:"Шавасана",hint:"Полное расслабление. Дыхание свободное. Тело интегрирует энергию. Не шевелись. 🙏",animation:null}
 ];
 
+// Пранаяма Восстановления — 31 мин
+// 8-дольное дыхание → Ситали → Со Хунг → Шавасана
+const PRANA_RESTORE = [
+  {id:400,name:"Настройка",duration:60,body:"Подготовка",hint:"Сядь прямо, позвоночник ровный. Закрой глаза. Несколько глубоких вдохов. Настройся.",animation:null},
+  {id:401,name:"8-дольное дыхание",duration:660,body:"Прана ⚡",hint:"Вдох 8 равных долей через нос (не открывая рот). Выдох — 1 глубокий через нос. Ритм ровный. Снимает стресс, балансирует прану.",animation:{type:"multipart",inhaleCount:8,inhalePart:0.5,exhale:3}},
+  {id:402,name:"— Переход —",duration:30,body:"🔄",hint:"Расслабь дыхание. Сверни язык трубочкой.",animation:null},
+  {id:403,name:"Ситали пранаяма",duration:300,body:"Охлаждение 🧊",hint:"Язык трубочкой, ВДОХ через язык (прохлада). ВЫДОХ через нос. Медленно, глубоко. Охлаждает, выводит токсины. Горький вкус = норма.",animation:{type:"simple",inhale:5,exhale:5}},
+  {id:404,name:"— Переход —",duration:30,body:"🔄",hint:"Расслабь язык. Руки в Гьян Мудру. Подготовься к Со Хунг.",animation:null},
+  {id:405,name:"Со Хунг",duration:300,body:"Целительное 🔱",hint:"Мощный ВДОХ через «О» рта (1с) — мысленно «SO». Мощный ВЫДОХ через нос (1с) — мысленно «HUNG». Пупок внутрь на выдохе!",animation:{type:"mantra",beats:[{label:"SO",duration:1,scale:"inhale"},{label:"HUNG",duration:1,scale:"exhale"}]}},
+  {id:406,name:"Шавасана",duration:480,body:"Интеграция",hint:"Ляг на спину. Полное расслабление. Дыхание свободное. Прана распределяется по телу. 🙏",animation:null}
+];
+
+// Sat Kriya — полная программа 31 мин
+// Главная крия Йоги Бхаджана для мужской силы и сублимации
+const SAT_KRIYA_FULL = [
+  {id:500,name:"Настройка — Adi Mantra",duration:60,body:"Вход",hint:"Пой ONG NAMO GURU DEV NAMO 3 раза. Руки в намасте. Точка между бровей.",animation:null},
+  {id:501,name:"Разогрев — полное дыхание",duration:180,body:"Тело 8 ⭐",hint:"Глубокое полное дыхание: живот → рёбра → грудь → выдох обратно. Разогрев.",animation:{type:"simple",inhale:6,exhale:6}},
+  {id:502,name:"Sat Kriya — начало",duration:180,body:"Ojas ⬆️",hint:"Руки вверх, ладони вместе, указательные пальцы смотрят вверх. SAT — втяни пупок РЕЗКО. NAM — отпусти. Ровный ритм.",animation:{type:"mantra",beats:[{label:"SAT",duration:1,scale:"inhale"},{label:"NAM",duration:1,scale:"exhale"}]}},
+  {id:503,name:"Sat Kriya — углубление",duration:420,body:"Ojas ⬆️⬆️",hint:"Продолжай! SAT-NAM. Пупок мощно внутрь на SAT. Энергия поднимается по позвоночнику. Не останавливайся.",animation:{type:"mantra",beats:[{label:"SAT",duration:1,scale:"inhale"},{label:"NAM",duration:1,scale:"exhale"}]}},
+  {id:504,name:"Sat Kriya — полная сила",duration:660,body:"Ojas ⬆️⬆️⬆️ 🔥",hint:"ТЫ В ПОТОКЕ. SAT-NAM-SAT-NAM. Руки вверх, позвоночник прямой. Каждый SAT — удар пупком. Трансформация сексуальной энергии.",animation:{type:"mantra",beats:[{label:"SAT",duration:1,scale:"inhale"},{label:"NAM",duration:1,scale:"exhale"}]}},
+  {id:505,name:"Завершение",duration:30,body:"Замок",hint:"Глубокий ВДОХ → задержка → Мулабандха (сжатие промежности) + втяни пупок → медленный ВЫДОХ. Повтори 3 раза.",animation:{type:"hold",inhale:5,hold:10,exhale:5}},
+  {id:506,name:"Шавасана",duration:660,body:"Интеграция",hint:"Ляг на спину. Равное время отдыху! Энергия распределяется. Не вставай сразу. 🙏",animation:null}
+];
+
+// Нади Шуддхи + Бхастрика — 30 мин
+// Очищение каналов → Огонь → Бхрамари → Шавасана
+const NADI_FIRE = [
+  {id:600,name:"Настройка",duration:60,body:"Подготовка",hint:"Сядь прямо. Правая рука в Вишну Мудру (указательный+средний согнуты). Левая на колене.",animation:null},
+  {id:601,name:"Нади Шодхана — мягко",duration:300,body:"Ида ↔ Пингала",hint:"Закрой правую → вдох левой 4с → закрой обе → задержка 4с → закрой левую → выдох правой 4с. Потом наоборот.",animation:{type:"hold",inhale:4,hold:4,exhale:4}},
+  {id:602,name:"Нади Шодхана — глубже",duration:300,body:"Ида ↔ Пингала",hint:"Тот же паттерн, но удлиняем: вдох 6с → задержка 6с → выдох 6с. Каналы очищаются.",animation:{type:"hold",inhale:6,hold:6,exhale:6}},
+  {id:603,name:"Нади Шодхана — полная",duration:300,body:"Ида ↔ Пингала ✨",hint:"Максимум: вдох 8с → задержка 8с → выдох 8с. Ида и Пингала в балансе. Сушумна открывается.",animation:{type:"hold",inhale:8,hold:8,exhale:8}},
+  {id:604,name:"— Переход —",duration:30,body:"🔄",hint:"Опусти руку. Свободное дыхание. Подготовка к огню.",animation:null},
+  {id:605,name:"Бхастрика — огненное дыхание",duration:300,body:"Агни 🔥",hint:"Быстрые мощные вдохи и выдохи через нос. Диафрагма как кузнечные меха. Живот резко внутрь на выдохе. Разжигай огонь!",animation:{type:"fire"}},
+  {id:606,name:"— Переход —",duration:30,body:"🔄",hint:"Глубокий вдох, задержка, медленный выдох. Переходим к Бхрамари.",animation:null},
+  {id:607,name:"Бхрамари — жужжание пчелы",duration:300,body:"Анахата 💚",hint:"Закрой уши большими пальцами. Вдох через нос → выдох с гудящим звуком «ММММ». Вибрация заполняет череп. Пробуждает сердце.",animation:{type:"simple",inhale:4,exhale:8}},
+  {id:608,name:"Шавасана",duration:300,body:"Интеграция",hint:"Ляг. Каналы чисты, огонь горит, сердце вибрирует. Отдых. 🙏",animation:null}
+];
+
+// Дыхание в долях — 33 мин
+// Уникальная система Йоги Бхаджана: 4 → 8 → 12 долей
+const STROKES = [
+  {id:700,name:"Настройка — Adi Mantra",duration:60,body:"Вход",hint:"ONG NAMO GURU DEV NAMO × 3. Руки в намасте. Точка между бровей.",animation:null},
+  {id:701,name:"4-дольное дыхание",duration:420,body:"4 доли — Баланс",hint:"Вдох 1 глубокий через нос (3с). Выдох 4 равные доли через нос: Са-Та-На-Ма. Каждая доля ~0.7с. Медитативный баланс.",animation:{type:"multipart",inhaleCount:1,inhalePart:3,exhale:3}},
+  {id:702,name:"— Переход —",duration:30,body:"🔄",hint:"Свободное дыхание. Подготовься к 8 долям.",animation:null},
+  {id:703,name:"8-дольное дыхание",duration:660,body:"8 долей — Энергия ⚡",hint:"Вдох 8 равных долей через нос. Выдох 1 глубокий через нос. «11 минут в день дают энергию сбалансировать весь расход праны».",animation:{type:"multipart",inhaleCount:8,inhalePart:0.5,exhale:3}},
+  {id:704,name:"— Переход —",duration:30,body:"🔄",hint:"Свободное дыхание. Расслабь плечи.",animation:null},
+  {id:705,name:"12-дольное дыхание",duration:660,body:"12 долей — Исцеление 💎",hint:"Замок локтей (правая сверху). Вдох 12 долей (по 1с) → выдох 12 долей (по 1с). Целительное дыхание — 101 болезнь по текстам йоги.",animation:{type:"multipart",inhaleCount:12,inhalePart:1,exhale:12}},
+  {id:706,name:"Шавасана",duration:300,body:"Интеграция",hint:"Полное расслабление. Прана активирована на всех уровнях. 🙏",animation:null}
+];
+
 // ===== COLOR THEMES =====
 const COLORS = {
   inhale:  { bg:'#E87420', ring1:'rgba(195,80,5,0.19)', ring2:'rgba(215,98,18,0.27)', ring3:'rgba(238,120,35,0.36)', ring4:'rgba(255,153,63,0.46)', text:'#fff', dark:false },
@@ -498,7 +564,7 @@ function showPracticeSelect(){
   document.body.classList.remove('no-scroll');
   const list=document.getElementById('practice-list');
   list.innerHTML='';
-  const allPractices = [...ALL_PRACTICES, ...EVENING_PRACTICES, ...ENERGY_BASIC, ...ENERGY_7PHASE].filter(p=>!p.name.includes('Пауза')&&!p.name.includes('Переход'));
+  const allPractices = [...ALL_PRACTICES, ...EVENING_PRACTICES, ...ENERGY_BASIC, ...ENERGY_7PHASE, ...PRANA_RESTORE, ...SAT_KRIYA_FULL, ...NADI_FIRE, ...STROKES].filter(p=>!p.name.includes('Пауза')&&!p.name.includes('Переход'));
   allPractices.forEach((p,i)=>{
     const el=document.createElement('div');
     el.className='practice-item';
@@ -524,6 +590,14 @@ function startSequence(type){
     currentSequence=[...ENERGY_BASIC];
   } else if(type==='energy_7phase'){
     currentSequence=[...ENERGY_7PHASE];
+  } else if(type==='prana_restore'){
+    currentSequence=[...PRANA_RESTORE];
+  } else if(type==='sat_kriya_full'){
+    currentSequence=[...SAT_KRIYA_FULL];
+  } else if(type==='nadi_fire'){
+    currentSequence=[...NADI_FIRE];
+  } else if(type==='strokes'){
+    currentSequence=[...STROKES];
   } else {
     currentSequence=[...EVENING_PRACTICES];
   }
