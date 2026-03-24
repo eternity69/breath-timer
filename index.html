@@ -111,6 +111,12 @@ body{
   position:relative;display:flex;align-items:center;justify-content:center;
   flex-shrink:0;width:100%;flex:1;max-height:60vh;
 }
+#breath-canvas{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  z-index:5;pointer-events:none;display:none;
+}
+.rings-hidden .circle-ring{display:none !important}
+
 .circle-ring{
   position:absolute;border-radius:50%;
   transition:width 0.5s cubic-bezier(0.4,0,0.2,1),height 0.5s cubic-bezier(0.4,0,0.2,1),opacity 0.8s,background-color 1s;
@@ -284,6 +290,7 @@ body{
   </div>
 
   <div class="circles-container" id="circles-container">
+    <canvas id="breath-canvas"></canvas>
     <div class="circle-ring circle-ring-1" id="ring1"></div>
     <div class="circle-ring circle-ring-2" id="ring2"></div>
     <div class="circle-ring circle-ring-3" id="ring3"></div>
@@ -547,6 +554,7 @@ function hideAll(){
 function showMenu(){
   stopTimer();
   releaseWakeLock();
+  setCanvasMode(null);
   hideAll();
   menuScreen.style.display='flex';
   document.body.style.backgroundColor = COLORS.menu.bg;
@@ -581,6 +589,7 @@ function showPracticeSelect(){
 
 // ===== START =====
 function startSequence(type){
+  setCanvasMode(VISUAL_STYLES[type] || null);
   if(type==='morning'){
     currentSequence=[...ALL_PRACTICES];
   } else if(type==='energy_basic'){
@@ -755,7 +764,9 @@ const BASE = {
   r4: {min:0.55, max:1.0}
 };
 
+let lastScale = 0.3;
 function setRingsScale(scale) {
+  lastScale = scale;
   // scale: 0 = fully contracted, 1 = fully expanded
   const s = 0.55 + 0.45 * scale;
   ring1.style.transform = `scale(${s * 0.95})`;
@@ -787,6 +798,222 @@ function resetCircles(){
   document.getElementById('phase-counter').textContent='';
 }
 
+// ===== CANVAS VISUALS =====
+const VISUAL_STYLES = {
+  morning:'blob', evening:'ripple', energy_basic:'mandala', energy_7phase:'mandala',
+  prana_restore:'blob', sat_kriya_full:'blob', nadi_fire:'ripple', strokes:'mandala'
+};
+let currentVisualStyle = null;
+let canvasEl, canvasCtx;
+let canvasScale = 0.3; // current breath scale 0-1
+
+function initCanvas(){
+  canvasEl = document.getElementById('breath-canvas');
+  canvasCtx = canvasEl.getContext('2d');
+  resizeCanvas();
+}
+
+function resizeCanvas(){
+  if(!canvasEl) return;
+  const container = document.getElementById('circles-container');
+  const w = container.clientWidth, h = container.clientHeight;
+  const dpr = window.devicePixelRatio || 1;
+  canvasEl.width = w * dpr;
+  canvasEl.height = h * dpr;
+  canvasEl.style.width = w + 'px';
+  canvasEl.style.height = h + 'px';
+  canvasCtx.setTransform(dpr,0,0,dpr,0,0);
+}
+window.addEventListener('resize', resizeCanvas);
+
+function setCanvasMode(style){
+  currentVisualStyle = style;
+  if(!canvasEl) initCanvas();
+  if(style){
+    canvasEl.style.display = 'block';
+    document.getElementById('circles-container').classList.add('rings-hidden');
+  } else {
+    canvasEl.style.display = 'none';
+    document.getElementById('circles-container').classList.remove('rings-hidden');
+  }
+}
+
+// --- BLOB ---
+function drawBlob(ctx, w, h, scale, phase, t){
+  ctx.clearRect(0,0,w,h);
+  const cx=w/2, cy=h/2;
+  const baseR = Math.min(w,h)*0.18;
+  const r = baseR + baseR*1.2*scale;
+  const complexity = 0.15 + 0.35*scale; // more complex when expanded
+  const layers = 4;
+  const c = getPhaseColor(phase);
+  
+  for(let L=layers;L>=1;L--){
+    const layerR = r * (0.5 + 0.5*L/layers);
+    const alpha = (0.08 + 0.07*L/layers);
+    ctx.beginPath();
+    const pts = 120;
+    for(let i=0;i<=pts;i++){
+      const a = (i/pts)*Math.PI*2;
+      const n1 = Math.sin(a*3 + t*1.2 + L)*complexity;
+      const n2 = Math.sin(a*5 - t*0.8 + L*2)*complexity*0.6;
+      const n3 = Math.sin(a*7 + t*2.1 + L*0.5)*complexity*0.3;
+      const distort = 1 + n1 + n2 + n3;
+      const px = cx + Math.cos(a)*layerR*distort;
+      const py = cy + Math.sin(a)*layerR*distort;
+      if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.closePath();
+    ctx.fillStyle = c.replace('ALPHA', String(alpha));
+    ctx.fill();
+  }
+  // inner glow
+  const grad = ctx.createRadialGradient(cx,cy,0,cx,cy,r*0.5);
+  grad.addColorStop(0, c.replace('ALPHA','0.25'));
+  grad.addColorStop(1, c.replace('ALPHA','0'));
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx,cy,r*0.5,0,Math.PI*2);
+  ctx.fill();
+}
+
+// --- RIPPLE ---
+const ripples = [];
+let lastRippleTime = 0;
+
+function drawRipple(ctx, w, h, scale, phase, t){
+  ctx.clearRect(0,0,w,h);
+  const cx=w/2, cy=h/2;
+  const maxR = Math.min(w,h)*0.42;
+  const mainR = maxR*0.2 + maxR*0.8*scale;
+  const c = getPhaseColor(phase);
+  
+  // spawn ripple every 0.8s
+  if(t - lastRippleTime > 0.8){
+    ripples.push({born:t, r:mainR, phase:phase});
+    lastRippleTime = t;
+    if(ripples.length > 8) ripples.shift();
+  }
+  
+  // draw ripple trails
+  for(const rip of ripples){
+    const age = t - rip.born;
+    if(age > 3) continue;
+    const expand = rip.r + age*30;
+    const alpha = Math.max(0, 0.3 - age*0.1);
+    ctx.beginPath();
+    ctx.arc(cx, cy, expand, 0, Math.PI*2);
+    ctx.strokeStyle = c.replace('ALPHA', String(alpha));
+    ctx.lineWidth = 2 - age*0.5;
+    if(ctx.lineWidth > 0) ctx.stroke();
+  }
+  
+  // main ring
+  ctx.beginPath();
+  ctx.arc(cx, cy, mainR, 0, Math.PI*2);
+  ctx.strokeStyle = c.replace('ALPHA','0.5');
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  
+  // inner fill
+  const grad = ctx.createRadialGradient(cx,cy,0,cx,cy,mainR);
+  grad.addColorStop(0, c.replace('ALPHA','0.18'));
+  grad.addColorStop(0.7, c.replace('ALPHA','0.08'));
+  grad.addColorStop(1, c.replace('ALPHA','0'));
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx,cy,mainR,0,Math.PI*2);
+  ctx.fill();
+  
+  // clean old ripples
+  while(ripples.length > 0 && t - ripples[0].born > 3) ripples.shift();
+}
+
+// --- MANDALA ---
+let mandalaAngle = 0;
+
+function drawMandala(ctx, w, h, scale, phase, t){
+  ctx.clearRect(0,0,w,h);
+  const cx=w/2, cy=h/2;
+  const maxR = Math.min(w,h)*0.42;
+  const r = maxR*0.15 + maxR*0.85*scale;
+  const c = getPhaseColor(phase);
+  
+  // rotation speed proportional to breath speed
+  const rotSpeed = phase==='inhale' ? 0.8 : phase==='exhale' ? -0.6 : 0.1;
+  mandalaAngle += rotSpeed * 0.016; // ~per frame at 60fps
+  
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(mandalaAngle);
+  
+  const petals = 6;
+  const layers = 3;
+  
+  for(let L=1; L<=layers; L++){
+    const layerR = r * L/layers;
+    const alpha = 0.12 + 0.08*L/layers;
+    
+    // flower of life circles
+    for(let i=0; i<petals; i++){
+      const a = (i/petals)*Math.PI*2;
+      const px = Math.cos(a)*layerR*0.5;
+      const py = Math.sin(a)*layerR*0.5;
+      ctx.beginPath();
+      ctx.arc(px, py, layerR*0.5, 0, Math.PI*2);
+      ctx.strokeStyle = c.replace('ALPHA', String(alpha));
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+    
+    // connecting lines
+    for(let i=0; i<petals; i++){
+      const a1 = (i/petals)*Math.PI*2;
+      const a2 = ((i+1)/petals)*Math.PI*2;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a1)*layerR, Math.sin(a1)*layerR);
+      ctx.lineTo(Math.cos(a2)*layerR, Math.sin(a2)*layerR);
+      ctx.strokeStyle = c.replace('ALPHA', String(alpha*0.5));
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+  
+  // center circle
+  ctx.beginPath();
+  ctx.arc(0, 0, r*0.08, 0, Math.PI*2);
+  ctx.fillStyle = c.replace('ALPHA','0.4');
+  ctx.fill();
+  
+  // outer ring
+  ctx.beginPath();
+  ctx.arc(0, 0, r, 0, Math.PI*2);
+  ctx.strokeStyle = c.replace('ALPHA','0.2');
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  
+  ctx.restore();
+}
+
+// --- Color helper ---
+function getPhaseColor(phase){
+  // Returns rgba template with ALPHA placeholder
+  if(phase==='inhale') return 'rgba(232,116,32,ALPHA)';
+  if(phase==='exhale') return 'rgba(122,140,58,ALPHA)';
+  if(phase==='hold') return 'rgba(160,143,115,ALPHA)';
+  return 'rgba(160,143,115,ALPHA)'; // pause/idle
+}
+
+function renderCanvas(scale, phase, t){
+  if(!currentVisualStyle || !canvasCtx) return;
+  const w = canvasEl.width / (window.devicePixelRatio||1);
+  const h = canvasEl.height / (window.devicePixelRatio||1);
+  canvasScale = scale;
+  if(currentVisualStyle==='blob') drawBlob(canvasCtx,w,h,scale,phase,t);
+  else if(currentVisualStyle==='ripple') drawRipple(canvasCtx,w,h,scale,phase,t);
+  else if(currentVisualStyle==='mandala') drawMandala(canvasCtx,w,h,scale,phase,t);
+}
+
 // ===== ANIMATION =====
 let animStartTime=0;
 
@@ -809,21 +1036,21 @@ function runAnimation(){
   const mantra=document.getElementById('breath-mantra');
   const counter=document.getElementById('phase-counter');
 
+  const elapsed=(Date.now()-animStartTime)/1000;
+  let frameScale=0.3, framePhase='pause';
+
   if(!anim){
-    // No animation — gentle pulse, use inhale color
-    const t=(Date.now()-animStartTime)/1000;
-    const s=0.35+0.08*Math.sin(t*0.8);
+    const s=0.35+0.08*Math.sin(elapsed*0.8);
     setRingsNoTransition();
     setRingsScale(s);
     label.textContent='🧘';
     mantra.textContent='';
     counter.textContent='';
     applyTheme('inhale');
+    renderCanvas(s,'pause',elapsed);
     animFrameId=requestAnimationFrame(runAnimation);
     return;
   }
-
-  const elapsed=(Date.now()-animStartTime)/1000;
 
   if(anim.type==='simple'){
     const cycle=anim.inhale+anim.exhale;
@@ -950,8 +1177,8 @@ function runAnimation(){
   else if(anim.type==='fire'){
     const rate=2.5;
     const pos=elapsed*rate;
-    const phase=pos%1;
-    const s=phase<0.35?phase/0.35:1-(phase-0.35)/0.65;
+    const ph=pos%1;
+    const s=ph<0.35?ph/0.35:1-(ph-0.35)/0.65;
     setRingsNoTransition();
     setRingsScale(s);
     label.textContent='🔥';
@@ -960,6 +1187,8 @@ function runAnimation(){
     applyTheme('inhale');
   }
 
+  // Canvas rendering — read current state from rings
+  renderCanvas(lastScale, currentPhase, elapsed);
   animFrameId=requestAnimationFrame(runAnimation);
 }
 
