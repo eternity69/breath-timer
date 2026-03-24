@@ -589,7 +589,7 @@ function showPracticeSelect(){
 
 // ===== START =====
 function startSequence(type){
-  setCanvasMode(VISUAL_STYLES[type] || null);
+  const vizStyle = VISUAL_STYLES[type] || null;
   if(type==='morning'){
     currentSequence=[...ALL_PRACTICES];
   } else if(type==='energy_basic'){
@@ -612,6 +612,9 @@ function startSequence(type){
   hideAll();
   timerScreen.style.display='flex';
   document.body.classList.add('no-scroll');
+  // init canvas AFTER screen is visible so dimensions are correct
+  setCanvasMode(vizStyle);
+  resizeCanvas();
   loadPractice(0);
 }
 
@@ -622,6 +625,7 @@ function startSingle(idx){
   hideAll();
   timerScreen.style.display='flex';
   document.body.classList.add('no-scroll');
+  setCanvasMode(null);
   loadPractice(0);
 }
 
@@ -1006,8 +1010,10 @@ function getPhaseColor(phase){
 
 function renderCanvas(scale, phase, t){
   if(!currentVisualStyle || !canvasCtx) return;
-  const w = canvasEl.width / (window.devicePixelRatio||1);
-  const h = canvasEl.height / (window.devicePixelRatio||1);
+  let w = canvasEl.width / (window.devicePixelRatio||1);
+  let h = canvasEl.height / (window.devicePixelRatio||1);
+  if(w < 10 || h < 10){ resizeCanvas(); w = canvasEl.width / (window.devicePixelRatio||1); h = canvasEl.height / (window.devicePixelRatio||1); }
+  if(w < 10 || h < 10) return;
   canvasScale = scale;
   if(currentVisualStyle==='blob') drawBlob(canvasCtx,w,h,scale,phase,t);
   else if(currentVisualStyle==='ripple') drawRipple(canvasCtx,w,h,scale,phase,t);
