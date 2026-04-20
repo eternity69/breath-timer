@@ -236,14 +236,6 @@ body{
 <div id="menu-screen">
   <h1>Breath Timer</h1>
   <div class="subtitle">дыхательные практики</div>
-  <button class="menu-btn" onclick="startSequence('morning')">
-    <div class="btn-title">☀️ Утро — 60 мин</div>
-    <div class="btn-desc">8 практик • Прана + Мужская сила • 55 мин</div>
-  </button>
-  <button class="menu-btn" onclick="startSequence('evening')">
-    <div class="btn-title">🌙 Вечер — 30 мин</div>
-    <div class="btn-desc">Баланс • Глубокое дыхание • Медитация • Шавасана</div>
-  </button>
   <button class="menu-btn" onclick="startSequence('energy_basic')">
     <div class="btn-title">🔥 Энергодыхание — 33 мин</div>
     <div class="btn-desc">Карловский • 2 цикла связного дыхания + окна</div>
@@ -256,21 +248,9 @@ body{
     <div class="btn-title">⚡ Энергодыхание по чакрам — 50 мин</div>
     <div class="btn-desc">Карловский • 7 чакр • глубокая проработка</div>
   </button>
-  <button class="menu-btn" onclick="startSequence('prana_restore')">
-    <div class="btn-title">🌬️ Пранаяма Восстановления — 31 мин</div>
-    <div class="btn-desc">8-дольное дыхание → Ситали → Со Хунг → Шавасана</div>
-  </button>
   <button class="menu-btn" onclick="startSequence('sat_kriya_full')">
     <div class="btn-title">💪 Sat Kriya — 31 мин</div>
     <div class="btn-desc">Йоги Бхаджан • Сублимация • Мужская сила</div>
-  </button>
-  <button class="menu-btn" onclick="startSequence('nadi_fire')">
-    <div class="btn-title">🐍 Нади + Бхастрика — 30 мин</div>
-    <div class="btn-desc">Очищение каналов → Огонь → Бхрамари → Шавасана</div>
-  </button>
-  <button class="menu-btn" onclick="startSequence('strokes')">
-    <div class="btn-title">🎵 Дыхание в долях — 33 мин</div>
-    <div class="btn-desc">Йоги Бхаджан • 4-8-12 долей • уникальная техника</div>
   </button>
 
 </div>
@@ -604,7 +584,7 @@ function showPracticeSelect(){
   document.body.classList.remove('no-scroll');
   const list=document.getElementById('practice-list');
   list.innerHTML='';
-  const allPractices = [...ALL_PRACTICES, ...EVENING_PRACTICES, ...ENERGY_BASIC, ...WIM_HOF_8, ...ENERGY_7PHASE, ...PRANA_RESTORE, ...SAT_KRIYA_FULL, ...NADI_FIRE, ...STROKES].filter(p=>!p.name.includes('Пауза')&&!p.name.includes('Переход'));
+  const allPractices = [...ENERGY_BASIC, ...WIM_HOF_8, ...ENERGY_7PHASE, ...SAT_KRIYA_FULL].filter(p=>!p.name.includes('Пауза')&&!p.name.includes('Переход'));
   allPractices.forEach((p,i)=>{
     const el=document.createElement('div');
     el.className='practice-item';
@@ -624,24 +604,16 @@ function showPracticeSelect(){
 
 // ===== START =====
 function startSequence(type){
-  if(type==='morning'){
-    currentSequence=[...ALL_PRACTICES];
-  } else if(type==='energy_basic'){
+  if(type==='energy_basic'){
     currentSequence=[...ENERGY_BASIC];
   } else if(type==='wim_hof_8'){
     currentSequence=[...WIM_HOF_8];
   } else if(type==='energy_7phase'){
     currentSequence=[...ENERGY_7PHASE];
-  } else if(type==='prana_restore'){
-    currentSequence=[...PRANA_RESTORE];
   } else if(type==='sat_kriya_full'){
     currentSequence=[...SAT_KRIYA_FULL];
-  } else if(type==='nadi_fire'){
-    currentSequence=[...NADI_FIRE];
-  } else if(type==='strokes'){
-    currentSequence=[...STROKES];
   } else {
-    currentSequence=[...EVENING_PRACTICES];
+    return;
   }
   currentIndex=0;
   startTime=Date.now();
