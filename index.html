@@ -240,6 +240,18 @@ body{
     <div class="btn-title">🧊 Вим Хоф — 8 раундов</div>
     <div class="btn-desc">35 дыханий → выдох → задержка → восстановительный вдох</div>
   </button>
+  <button class="menu-btn" onclick="startSequence('hv_retention')">
+    <div class="btn-title">🌪️ Гипервентиляция + задержка</div>
+    <div class="btn-desc">Короткий протокол • 4 раунда • частое дыхание + паузы</div>
+  </button>
+  <button class="menu-btn" onclick="startSequence('co2_ladder')">
+    <div class="btn-title">🫁 CO₂ Лестница</div>
+    <div class="btn-desc">Носовое дыхание + мягкие задержки по нарастающей</div>
+  </button>
+  <button class="menu-btn" onclick="startSequence('bhastrika_intervals')">
+    <div class="btn-title">🔥 Бхастрика интервалы</div>
+    <div class="btn-desc">8 интервалов • активный вдох и выдох • разгон энергии</div>
+  </button>
   <button class="menu-btn" onclick="startSequence('energy_basic')">
     <div class="btn-title">🔥 Энергодыхание — 33 мин</div>
     <div class="btn-desc">Карловский • 2 цикла связного дыхания + окна</div>
@@ -392,6 +404,70 @@ const WIM_HOF_8 = [
   {id:273,name:"Раунд 8 — задержка на выдохе",duration:120,body:"Пустота",hint:"Последняя задержка. Полная неподвижность, полное наблюдение. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:120,exhale:0}},
   {id:274,name:"Раунд 8 — восстановление",duration:15,body:"Вдох",hint:"Глубокий вдох, удержание, спокойный отпуск.",animation:{type:"hold",inhale:5,hold:10,exhale:0}},
   {id:275,name:"Интеграция",duration:180,body:"Интеграция",hint:"Свободное дыхание. Полежи спокойно, не вставай резко. Наблюдай тепло, покой и ясность.",animation:null}
+];
+
+// Циклическая гипервентиляция с задержкой — короткий протокол
+const HV_RETENTION = [
+  {id:1100,name:"Настройка",duration:45,body:"Подготовка",hint:"Ляг или сядь устойчиво. Не практикуй в воде, за рулём или стоя. Если мутнеет в глазах, сразу смягчи темп.",animation:null},
+  {id:1101,name:"Раунд 1 — активное дыхание",duration:60,body:"Раунд 1/4",hint:"30 мощных дыханий. Вдох активный, выдох отпущенный. Без пауз, ровной волной.",animation:{type:"simple",inhale:1.1,exhale:0.9}},
+  {id:1102,name:"Раунд 1 — задержка на выдохе",duration:30,body:"Пустота",hint:"Выдохни и остановись. Расслабь лицо и плечи. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:30,exhale:0}},
+  {id:1103,name:"Раунд 1 — восстановление",duration:15,body:"Вдох",hint:"Один полный вдох, мягкая фиксация, спокойный отпуск.",animation:{type:"hold",inhale:5,hold:10,exhale:0}},
+  {id:1104,name:"Раунд 2 — активное дыхание",duration:60,body:"Раунд 2/4",hint:"Снова 30 дыханий. Чуть глубже, но без насилия. Держи ритм.",animation:{type:"simple",inhale:1.1,exhale:0.9}},
+  {id:1105,name:"Раунд 2 — задержка на выдохе",duration:45,body:"Пустота",hint:"Последний выдох и пауза. Не борись, просто наблюдай. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:45,exhale:0}},
+  {id:1106,name:"Раунд 2 — восстановление",duration:15,body:"Вдох",hint:"Глубокий вдох, короткая фиксация, отпусти.",animation:{type:"hold",inhale:5,hold:10,exhale:0}},
+  {id:1107,name:"Раунд 3 — активное дыхание",duration:60,body:"Раунд 3/4",hint:"Ещё 30 дыханий. Дыхание связное, тело расслаблено, голова ясная.",animation:{type:"simple",inhale:1.1,exhale:0.9}},
+  {id:1108,name:"Раунд 3 — задержка на выдохе",duration:60,body:"Пустота",hint:"Выдохни и останься в тишине. Если хочется вдохнуть раньше, вдыхай. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:60,exhale:0}},
+  {id:1109,name:"Раунд 3 — восстановление",duration:15,body:"Вдох",hint:"Полный вдох, мягко удержи, расслабься.",animation:{type:"hold",inhale:5,hold:10,exhale:0}},
+  {id:1110,name:"Раунд 4 — активное дыхание",duration:70,body:"Раунд 4/4",hint:"Финальный разгон, 35 дыханий. Глубоко, собранно, без лишнего напряжения.",animation:{type:"simple",inhale:1.1,exhale:0.9}},
+  {id:1111,name:"Раунд 4 — задержка на выдохе",duration:75,body:"Пустота",hint:"Последняя пауза. Полная неподвижность. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:75,exhale:0}},
+  {id:1112,name:"Раунд 4 — восстановление",duration:15,body:"Вдох",hint:"Один полный вдох, фиксация, спокойный отпуск.",animation:{type:"hold",inhale:5,hold:10,exhale:0}},
+  {id:1113,name:"Интеграция",duration:120,body:"Интеграция",hint:"Свободное дыхание. Полежи спокойно и не вставай резко.",animation:null}
+];
+
+// CO₂ лестница — мягкие задержки после выдоха
+const CO2_LADDER = [
+  {id:1200,name:"Настройка",duration:45,body:"Подготовка",hint:"Сядь прямо или ляг. Всё через нос. Работа мягкая, без борьбы и геройства.",animation:null},
+  {id:1201,name:"Раунд 1 — тихое дыхание",duration:60,body:"Раунд 1/6",hint:"Очень тихое носовое дыхание. Дыши меньше обычного, но без дискомфорта.",animation:{type:"simple",inhale:3,exhale:3}},
+  {id:1202,name:"Раунд 1 — пауза после выдоха",duration:10,body:"CO₂ 10с",hint:"После обычного выдоха мягкая пауза. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:10,exhale:0}},
+  {id:1203,name:"Раунд 1 — восстановление",duration:45,body:"Восстановление",hint:"Верни спокойное носовое дыхание. Не добирай воздух жадно.",animation:{type:"simple",inhale:4,exhale:5}},
+  {id:1204,name:"Раунд 2 — тихое дыхание",duration:60,body:"Раунд 2/6",hint:"Снова уменьши объём дыхания. Лицо и плечи мягкие.",animation:{type:"simple",inhale:3,exhale:3}},
+  {id:1205,name:"Раунд 2 — пауза после выдоха",duration:15,body:"CO₂ 15с",hint:"Мягкая задержка. Никакого насилия. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:15,exhale:0}},
+  {id:1206,name:"Раунд 2 — восстановление",duration:45,body:"Восстановление",hint:"Ровный носовой ритм, спокойно восстановись.",animation:{type:"simple",inhale:4,exhale:5}},
+  {id:1207,name:"Раунд 3 — тихое дыхание",duration:60,body:"Раунд 3/6",hint:"Сделай дыхание почти неслышным. Чуть меньше воздуха, больше спокойствия.",animation:{type:"simple",inhale:3,exhale:3}},
+  {id:1208,name:"Раунд 3 — пауза после выдоха",duration:20,body:"CO₂ 20с",hint:"Пауза средней длины. Остановись раньше, если тело просит вдох.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:20,exhale:0}},
+  {id:1209,name:"Раунд 3 — восстановление",duration:45,body:"Восстановление",hint:"Спокойно восстанови ритм, не форсируй вдох.",animation:{type:"simple",inhale:4,exhale:5}},
+  {id:1210,name:"Раунд 4 — тихое дыхание",duration:60,body:"Раунд 4/6",hint:"Сохраняй тихий носовой поток. Работа идёт через мягкость.",animation:{type:"simple",inhale:3,exhale:3}},
+  {id:1211,name:"Раунд 4 — пауза после выдоха",duration:25,body:"CO₂ 25с",hint:"Пауза длиннее. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:25,exhale:0}},
+  {id:1212,name:"Раунд 4 — восстановление",duration:45,body:"Восстановление",hint:"Мягкий возврат к носовому дыханию.",animation:{type:"simple",inhale:4,exhale:5}},
+  {id:1213,name:"Раунд 5 — тихое дыхание",duration:60,body:"Раунд 5/6",hint:"Дыхание маленькое и ровное. Никакой спешки.",animation:{type:"simple",inhale:3,exhale:3}},
+  {id:1214,name:"Раунд 5 — пауза после выдоха",duration:30,body:"CO₂ 30с",hint:"Длинная мягкая пауза. Остановись раньше, если это уже некомфортно.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:30,exhale:0}},
+  {id:1215,name:"Раунд 5 — восстановление",duration:45,body:"Восстановление",hint:"Верни спокойствие и ровность.",animation:{type:"simple",inhale:4,exhale:5}},
+  {id:1216,name:"Раунд 6 — тихое дыхание",duration:60,body:"Раунд 6/6",hint:"Финальный спокойный блок. Сохрани контроль и мягкость.",animation:{type:"simple",inhale:3,exhale:3}},
+  {id:1217,name:"Раунд 6 — пауза после выдоха",duration:35,body:"CO₂ 35с",hint:"Последняя пауза. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:35,exhale:0}},
+  {id:1218,name:"Раунд 6 — восстановление",duration:60,body:"Финал",hint:"Ровное носовое дыхание. Почувствуй, как тело успокаивается.",animation:{type:"simple",inhale:4,exhale:6}},
+  {id:1219,name:"Интеграция",duration:90,body:"Интеграция",hint:"Свободное дыхание, тихое наблюдение за состоянием.",animation:null}
+];
+
+// Бхастрика интервалы — короткие блоки активации
+const BHASTRIKA_INTERVALS = [
+  {id:1300,name:"Настройка",duration:45,body:"Подготовка",hint:"Сядь ровно. Вдох и выдох активные, через нос. Если появляется сильное головокружение, остановись.",animation:null},
+  {id:1301,name:"Интервал 1 — бхастрика",duration:30,body:"1/8",hint:"Активный вдох, активный выдох. Ритм ровный, корпус неподвижен.",animation:{type:"simple",inhale:0.75,exhale:0.75}},
+  {id:1302,name:"Интервал 1 — восстановление",duration:30,body:"Отдых",hint:"Спокойное носовое дыхание. Отпусти лишнее напряжение.",animation:{type:"simple",inhale:3,exhale:4}},
+  {id:1303,name:"Интервал 2 — бхастрика",duration:30,body:"2/8",hint:"Сохраняй активность, но не зажимай лицо и шею.",animation:{type:"simple",inhale:0.75,exhale:0.75}},
+  {id:1304,name:"Интервал 2 — восстановление",duration:30,body:"Отдых",hint:"Замедлись и верни носовой ритм.",animation:{type:"simple",inhale:3,exhale:4}},
+  {id:1305,name:"Интервал 3 — бхастрика",duration:30,body:"3/8",hint:"Вдох и выдох одинаково активные. Работает диафрагма.",animation:{type:"simple",inhale:0.75,exhale:0.75}},
+  {id:1306,name:"Интервал 3 — восстановление",duration:30,body:"Отдых",hint:"Спокойный ритм, мягкое восстановление.",animation:{type:"simple",inhale:3,exhale:4}},
+  {id:1307,name:"Интервал 4 — бхастрика",duration:30,body:"4/8",hint:"Середина практики. Огонь есть, но без надрыва.",animation:{type:"simple",inhale:0.75,exhale:0.75}},
+  {id:1308,name:"Интервал 4 — восстановление",duration:30,body:"Отдых",hint:"Восстанови ровное носовое дыхание.",animation:{type:"simple",inhale:3,exhale:4}},
+  {id:1309,name:"Интервал 5 — бхастрика",duration:30,body:"5/8",hint:"Снова активный блок. Позвоночник прямой, живот живой.",animation:{type:"simple",inhale:0.75,exhale:0.75}},
+  {id:1310,name:"Интервал 5 — восстановление",duration:30,body:"Отдых",hint:"Сбавь темп, выравни ритм.",animation:{type:"simple",inhale:3,exhale:4}},
+  {id:1311,name:"Интервал 6 — бхастрика",duration:30,body:"6/8",hint:"Не спеши, лучше ритм, чем хаос.",animation:{type:"simple",inhale:0.75,exhale:0.75}},
+  {id:1312,name:"Интервал 6 — восстановление",duration:30,body:"Отдых",hint:"Спокойно восстановись, носом.",animation:{type:"simple",inhale:3,exhale:4}},
+  {id:1313,name:"Интервал 7 — бхастрика",duration:30,body:"7/8",hint:"Предпоследний блок. Держи чистую механику дыхания.",animation:{type:"simple",inhale:0.75,exhale:0.75}},
+  {id:1314,name:"Интервал 7 — восстановление",duration:30,body:"Отдых",hint:"Ровное дыхание, мягкое расслабление.",animation:{type:"simple",inhale:3,exhale:4}},
+  {id:1315,name:"Интервал 8 — бхастрика",duration:30,body:"8/8",hint:"Финальный разгон. Мощно, но в контроле.",animation:{type:"simple",inhale:0.75,exhale:0.75}},
+  {id:1316,name:"Интервал 8 — восстановление",duration:45,body:"Финал",hint:"Позволь дыханию успокоиться и выровняться.",animation:{type:"simple",inhale:3,exhale:5}},
+  {id:1317,name:"Интеграция",duration:90,body:"Интеграция",hint:"Спокойно посиди или полежи. Почувствуй тепло и тонус в теле.",animation:null}
 ];
 
 // 7-фазное Энергодыхание (50 мин) — 7 чакр, каждая с нарастающим темпом
@@ -584,7 +660,7 @@ function showPracticeSelect(){
   document.body.classList.remove('no-scroll');
   const list=document.getElementById('practice-list');
   list.innerHTML='';
-  const allPractices = [...WIM_HOF_8, ...ENERGY_BASIC, ...ENERGY_7PHASE, ...SAT_KRIYA_FULL].filter(p=>!p.name.includes('Пауза')&&!p.name.includes('Переход'));
+  const allPractices = [...WIM_HOF_8, ...HV_RETENTION, ...CO2_LADDER, ...BHASTRIKA_INTERVALS, ...ENERGY_BASIC, ...ENERGY_7PHASE, ...SAT_KRIYA_FULL].filter(p=>!p.name.includes('Пауза')&&!p.name.includes('Переход'));
   allPractices.forEach((p,i)=>{
     const el=document.createElement('div');
     el.className='practice-item';
@@ -604,10 +680,16 @@ function showPracticeSelect(){
 
 // ===== START =====
 function startSequence(type){
-  if(type==='energy_basic'){
-    currentSequence=[...ENERGY_BASIC];
-  } else if(type==='wim_hof_8'){
+  if(type==='wim_hof_8'){
     currentSequence=[...WIM_HOF_8];
+  } else if(type==='hv_retention'){
+    currentSequence=[...HV_RETENTION];
+  } else if(type==='co2_ladder'){
+    currentSequence=[...CO2_LADDER];
+  } else if(type==='bhastrika_intervals'){
+    currentSequence=[...BHASTRIKA_INTERVALS];
+  } else if(type==='energy_basic'){
+    currentSequence=[...ENERGY_BASIC];
   } else if(type==='energy_7phase'){
     currentSequence=[...ENERGY_7PHASE];
   } else if(type==='sat_kriya_full'){
