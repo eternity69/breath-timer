@@ -236,13 +236,13 @@ body{
 <div id="menu-screen">
   <h1>Breath Timer</h1>
   <div class="subtitle">дыхательные практики</div>
-  <button class="menu-btn" onclick="startSequence('energy_basic')">
-    <div class="btn-title">🔥 Энергодыхание — 33 мин</div>
-    <div class="btn-desc">Карловский • 2 цикла связного дыхания + окна</div>
-  </button>
   <button class="menu-btn" onclick="startSequence('wim_hof_8')">
     <div class="btn-title">🧊 Вим Хоф — 8 раундов</div>
     <div class="btn-desc">35 дыханий → выдох → задержка → восстановительный вдох</div>
+  </button>
+  <button class="menu-btn" onclick="startSequence('energy_basic')">
+    <div class="btn-title">🔥 Энергодыхание — 33 мин</div>
+    <div class="btn-desc">Карловский • 2 цикла связного дыхания + окна</div>
   </button>
   <button class="menu-btn" onclick="startSequence('energy_7phase')">
     <div class="btn-title">⚡ Энергодыхание по чакрам — 50 мин</div>
@@ -584,7 +584,7 @@ function showPracticeSelect(){
   document.body.classList.remove('no-scroll');
   const list=document.getElementById('practice-list');
   list.innerHTML='';
-  const allPractices = [...ENERGY_BASIC, ...WIM_HOF_8, ...ENERGY_7PHASE, ...SAT_KRIYA_FULL].filter(p=>!p.name.includes('Пауза')&&!p.name.includes('Переход'));
+  const allPractices = [...WIM_HOF_8, ...ENERGY_BASIC, ...ENERGY_7PHASE, ...SAT_KRIYA_FULL].filter(p=>!p.name.includes('Пауза')&&!p.name.includes('Переход'));
   allPractices.forEach((p,i)=>{
     const el=document.createElement('div');
     el.className='practice-item';
