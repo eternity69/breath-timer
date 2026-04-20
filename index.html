@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -518,6 +521,11 @@ let wakeLock = null;
 let audioCtx = null;
 let startTime = 0;
 let currentPhase = 'idle'; // inhale, exhale, hold, idle, pause
+let updateCheckInFlight = null;
+let lastUpdateCheckAt = 0;
+
+const UPDATE_CHECK_INTERVAL_MS = 60000;
+const BUILD_STORAGE_KEY = 'breathTimerBuildToken';
 
 // ===== ELEMENTS =====
 const menuScreen = document.getElementById('menu-screen');
@@ -1089,8 +1097,53 @@ function releaseWakeLock(){
   }catch(e){}
 }
 
+// ===== APP UPDATE CHECK =====
+async function checkForAppUpdate(force=false){
+  const now = Date.now();
+  if(updateCheckInFlight) return updateCheckInFlight;
+  if(!force && now-lastUpdateCheckAt<15000) return;
+
+  lastUpdateCheckAt = now;
+  updateCheckInFlight = (async()=>{
+    try{
+      const res = await fetch(`./index.html?updateCheck=${now}`, {
+        method:'HEAD',
+        cache:'no-store'
+      });
+
+      if(!res.ok) return;
+
+      const remoteToken = (res.headers.get('etag') || res.headers.get('last-modified') || '').trim();
+      if(!remoteToken) return;
+
+      const storedToken = localStorage.getItem(BUILD_STORAGE_KEY);
+      if(!storedToken){
+        localStorage.setItem(BUILD_STORAGE_KEY, remoteToken);
+        return;
+      }
+
+      if(storedToken !== remoteToken){
+        localStorage.setItem(BUILD_STORAGE_KEY, remoteToken);
+        const nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.set('v', String(now));
+        window.location.replace(nextUrl.toString());
+      }
+    }catch(e){}
+    finally{updateCheckInFlight=null;}
+  })();
+
+  return updateCheckInFlight;
+}
+
 document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='visible'&&isRunning) requestWakeLock();
+  if(document.visibilityState==='visible'){
+    if(isRunning) requestWakeLock();
+    checkForAppUpdate(true);
+  }
+});
+
+window.addEventListener('pageshow',()=>{
+  checkForAppUpdate(true);
 });
 
 // ===== FULLSCREEN =====
@@ -1104,6 +1157,10 @@ function requestFullscreen(){
 
 // ===== INIT =====
 showMenu();
+checkForAppUpdate(true);
+setInterval(()=>{
+  if(document.visibilityState==='visible') checkForAppUpdate();
+}, UPDATE_CHECK_INTERVAL_MS);
 </script>
 </body>
 </html>
