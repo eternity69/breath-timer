@@ -116,7 +116,7 @@ body{
 }
 .circle-ring{
   position:absolute;border-radius:50%;
-  transition:width 0.5s cubic-bezier(0.4,0,0.2,1),height 0.5s cubic-bezier(0.4,0,0.2,1),opacity 0.8s,background-color 1s;
+  transition:width 0.5s cubic-bezier(0.4,0,0.2,1),height 0.5s cubic-bezier(0.4,0,0.2,1),opacity 0.8s,background-color 1s,box-shadow 1s;
 }
 .circle-ring-1{width:280px;height:280px;background:rgba(232,116,32,0.12);z-index:1}
 .circle-ring-2{width:220px;height:220px;background:rgba(232,116,32,0.18);z-index:2}
@@ -860,17 +860,16 @@ const BASE = {
 function setRingsScale(scale, mode='default') {
   // scale: 0 = fully contracted, 1 = fully expanded
   if(mode==='wimhof'){
-    const s = 0.12 + 1.03 * scale;
-    ring1.style.transform = `scale(${s * 1.06})`;
-    ring2.style.transform = `scale(${s * 1.03})`;
-    ring3.style.transform = `scale(${s * 1.01})`;
+    const s = 0.08 + 2.1 * scale;
+    ring1.style.transform = 'scale(0.08)';
+    ring2.style.transform = 'scale(0.08)';
+    ring3.style.transform = 'scale(0.08)';
     ring4.style.transform = `scale(${s})`;
 
-    const op = 0.22 + 0.78 * scale;
-    ring1.style.opacity = String(Math.min(0.42 + op * 0.16, 0.62));
-    ring2.style.opacity = String(Math.min(0.48 + op * 0.2, 0.72));
-    ring3.style.opacity = String(Math.min(0.55 + op * 0.22, 0.82));
-    ring4.style.opacity = String(Math.min(0.62 + op * 0.24, 0.92));
+    ring1.style.opacity = '0';
+    ring2.style.opacity = '0';
+    ring3.style.opacity = '0';
+    ring4.style.opacity = String(0.88 + 0.12 * scale);
     return;
   }
 
@@ -883,6 +882,31 @@ function setRingsScale(scale, mode='default') {
   ring2.style.opacity = '1';
   ring3.style.opacity = '1';
   ring4.style.opacity = '1';
+}
+
+function applyVisualModeAppearance(mode='default', phase='idle') {
+  if(mode==='wimhof'){
+    ring1.style.boxShadow = 'none';
+    ring2.style.boxShadow = 'none';
+    ring3.style.boxShadow = 'none';
+
+    if(phase==='inhale'){
+      ring4.style.backgroundColor = 'rgba(255, 170, 92, 0.98)';
+      ring4.style.boxShadow = '0 0 42px rgba(255, 170, 92, 0.28)';
+    } else if(phase==='exhale'){
+      ring4.style.backgroundColor = 'rgba(162, 196, 84, 0.98)';
+      ring4.style.boxShadow = '0 0 28px rgba(162, 196, 84, 0.16)';
+    } else {
+      ring4.style.backgroundColor = 'rgba(255, 170, 92, 0.94)';
+      ring4.style.boxShadow = '0 0 24px rgba(255, 170, 92, 0.14)';
+    }
+    return;
+  }
+
+  ring1.style.boxShadow = 'none';
+  ring2.style.boxShadow = 'none';
+  ring3.style.boxShadow = 'none';
+  ring4.style.boxShadow = 'none';
 }
 
 function setRingsTransition(dur) {
@@ -903,6 +927,7 @@ function setRingsNoTransition() {
 function resetCircles(){
   setRingsNoTransition();
   setRingsScale(0.3);
+  applyVisualModeAppearance('default');
   document.getElementById('breath-label').textContent='';
   document.getElementById('breath-mantra').textContent='';
   document.getElementById('phase-counter').textContent='';
@@ -956,6 +981,7 @@ function runAnimation(){
       label.textContent=anim.inhaleLabel||'Вдох';
       counter.textContent=Math.ceil(anim.inhale-pos)+'с';
       applyTheme('inhale');
+      applyVisualModeAppearance(anim.visualMode, 'inhale');
     } else {
       const exPos=pos-anim.inhale;
       const progress=1-exPos/anim.exhale;
@@ -964,6 +990,7 @@ function runAnimation(){
       label.textContent=anim.exhaleLabel||'Выдох';
       counter.textContent=Math.ceil(anim.exhale-exPos)+'с';
       applyTheme('exhale');
+      applyVisualModeAppearance(anim.visualMode, 'exhale');
     }
     mantra.textContent='';
   }
