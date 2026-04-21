@@ -16,7 +16,7 @@
 <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Breath%20Timer%22%2C%22short_name%22%3A%22Breath%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a1a2e%22%2C%22theme_color%22%3A%22%231a1a2e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%253E%253Ctext%20y%3D'.9em'%20font-size%3D'90'%253E%25F0%259F%258C%25AC%25EF%25B8%258F%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;touch-action:manipulation}
+html,body{height:100%;touch-action:manipulation;background:#F5F0E8}
 body.no-scroll{overflow:hidden}
 body{
   background:#F5F0E8;
@@ -25,7 +25,7 @@ body{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   min-height:100vh;min-height:100dvh;
   user-select:none;-webkit-user-select:none;
-  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  padding:0;
   transition:background-color 1s ease, color 0.8s ease;
 }
 html.wimhof-blue-bg,
@@ -43,7 +43,8 @@ body.wimhof-blue-bg{
 /* ===== MENU SCREEN ===== */
 #menu-screen{
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
-  gap:16px;width:100%;min-height:100%;padding:20px 20px 40px;
+  gap:16px;width:100%;min-height:100%;
+  padding:calc(20px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
   position:absolute;top:0;left:0;right:0;bottom:0;z-index:10;
   overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
 }
@@ -72,7 +73,8 @@ body.wimhof-blue-bg{
 /* ===== PRACTICE SELECT ===== */
 #practice-select{
   display:none;flex-direction:column;align-items:center;
-  width:100%;height:100%;padding:20px;
+  width:100%;height:100%;
+  padding:calc(20px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
   position:absolute;top:0;left:0;z-index:10;overflow-y:auto;
 }
 #practice-select h2{font-family:Georgia,serif;font-size:1.5em;font-weight:600;color:#1a1008;margin-bottom:16px;margin-top:10px}
@@ -95,7 +97,8 @@ body.wimhof-blue-bg{
 /* ===== TIMER SCREEN ===== */
 #timer-screen{
   display:none;flex-direction:column;align-items:center;justify-content:space-between;
-  width:100%;height:100%;padding:20px 16px 12px;
+  width:100%;height:100%;
+  padding:calc(20px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
   position:absolute;top:0;left:0;
   transition:background-color 1s ease;
 }
@@ -203,6 +206,7 @@ body.wimhof-blue-bg{
 #complete-screen{
   display:none;flex-direction:column;align-items:center;justify-content:center;
   gap:20px;width:100%;height:100%;
+  padding:calc(20px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
   position:absolute;top:0;left:0;z-index:10;
 }
 #complete-screen h2{font-family:Georgia,serif;font-size:2em;font-weight:400;color:#2a1f14}
