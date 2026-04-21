@@ -29,14 +29,15 @@ body{
   transition:background-color 1s ease, color 0.8s ease;
 }
 body.wimhof-blue-bg{
+  background-color:#071f63;
   background-image:
-    radial-gradient(circle at 18% 22%, rgba(117,177,255,0.18) 0, rgba(117,177,255,0.08) 10%, transparent 26%),
-    radial-gradient(circle at 82% 28%, rgba(98,149,255,0.14) 0, rgba(98,149,255,0.05) 12%, transparent 28%),
-    radial-gradient(circle at 52% 72%, rgba(67,108,222,0.18) 0, rgba(67,108,222,0.06) 14%, transparent 32%),
-    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.035) 0 2px, transparent 2px 20px),
-    linear-gradient(180deg, rgba(6,27,84,0.92) 0%, rgba(8,41,112,0.96) 48%, rgba(4,25,77,0.98) 100%);
-  background-blend-mode:screen,screen,screen,soft-light,normal;
-  background-size:100% 100%,100% 100%,100% 100%,240px 240px,100% 100%;
+    radial-gradient(circle at center, rgba(5,18,63,0.08) 0%, rgba(5,18,63,0.18) 38%, rgba(3,10,35,0.42) 100%),
+    linear-gradient(180deg, rgba(4,18,60,0.16) 0%, rgba(4,18,60,0.24) 100%),
+    url('assets/wimhof-reference-bg.jpg');
+  background-blend-mode:multiply,soft-light,normal;
+  background-position:center center;
+  background-repeat:no-repeat;
+  background-size:cover;
 }
 
 /* ===== MENU SCREEN ===== */
@@ -914,13 +915,13 @@ function applyVisualModeAppearance(mode='default', phase='idle') {
     ring3.style.boxShadow = 'none';
 
     if(phase==='inhale'){
-      ring4.style.backgroundColor = 'rgba(255, 170, 92, 0.98)';
-      ring4.style.boxShadow = '0 0 42px rgba(255, 170, 92, 0.28)';
+      ring4.style.backgroundColor = 'rgba(255, 211, 146, 0.99)';
+      ring4.style.boxShadow = '0 0 42px rgba(255, 177, 88, 0.34), 0 0 10px rgba(255,255,255,0.38) inset';
     } else if(phase==='exhale'){
-      ring4.style.backgroundColor = 'rgba(162, 196, 84, 0.98)';
-      ring4.style.boxShadow = '0 0 28px rgba(162, 196, 84, 0.16)';
+      ring4.style.backgroundColor = 'rgba(255, 177, 88, 0.96)';
+      ring4.style.boxShadow = '0 0 24px rgba(255, 160, 64, 0.18), 0 0 6px rgba(255,255,255,0.18) inset';
     } else {
-      ring4.style.backgroundColor = 'rgba(255, 170, 92, 0.94)';
+      ring4.style.backgroundColor = 'rgba(255, 190, 103, 0.95)';
       ring4.style.boxShadow = '0 0 24px rgba(255, 170, 92, 0.14)';
     }
     return;
