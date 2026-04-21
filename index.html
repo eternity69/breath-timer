@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#F5F0E8">
+<meta name="theme-color" content="#F5F0E8" id="theme-color-meta">
 <title>🌊 Breath</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
 <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Breath%20Timer%22%2C%22short_name%22%3A%22Breath%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a1a2e%22%2C%22theme_color%22%3A%22%231a1a2e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%253E%253Ctext%20y%3D'.9em'%20font-size%3D'90'%253E%25F0%259F%258C%25AC%25EF%25B8%258F%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
@@ -24,12 +24,16 @@ body{
   font-family:Georgia,'Times New Roman',serif;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   min-height:100vh;min-height:100dvh;
+  position:relative;isolation:isolate;
   user-select:none;-webkit-user-select:none;
   padding:0;
   transition:background-color 1s ease, color 0.8s ease;
 }
-html.wimhof-blue-bg,
-body.wimhof-blue-bg{
+#viewport-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:#F5F0E8;
+}
+#viewport-bg.wimhof-blue-bg{
   background-color:#071f63;
   background-image:
     radial-gradient(circle at 50% 38%, rgba(48,118,255,0.20) 0%, rgba(22,74,190,0.10) 26%, transparent 56%),
@@ -45,7 +49,7 @@ body.wimhof-blue-bg{
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
   gap:16px;width:100%;min-height:100%;
   padding:calc(20px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
-  position:absolute;top:0;left:0;right:0;bottom:0;z-index:10;
+  position:fixed;inset:0;z-index:10;
   overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
 }
 #menu-screen h1{
@@ -75,7 +79,7 @@ body.wimhof-blue-bg{
   display:none;flex-direction:column;align-items:center;
   width:100%;height:100%;
   padding:calc(20px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
-  position:absolute;top:0;left:0;z-index:10;overflow-y:auto;
+  position:fixed;inset:0;z-index:10;overflow-y:auto;
 }
 #practice-select h2{font-family:Georgia,serif;font-size:1.5em;font-weight:600;color:#1a1008;margin-bottom:16px;margin-top:10px}
 .practice-list{width:min(95%,400px);display:flex;flex-direction:column;gap:6px;padding-bottom:30px}
@@ -99,7 +103,7 @@ body.wimhof-blue-bg{
   display:none;flex-direction:column;align-items:center;justify-content:space-between;
   width:100%;height:100%;
   padding:calc(20px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
-  position:absolute;top:0;left:0;
+  position:fixed;inset:0;z-index:10;
   transition:background-color 1s ease;
 }
 .top-section{text-align:center;width:100%;flex-shrink:0;padding-top:8px}
@@ -207,7 +211,7 @@ body.wimhof-blue-bg{
   display:none;flex-direction:column;align-items:center;justify-content:center;
   gap:20px;width:100%;height:100%;
   padding:calc(20px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
-  position:absolute;top:0;left:0;z-index:10;
+  position:fixed;inset:0;z-index:10;
 }
 #complete-screen h2{font-family:Georgia,serif;font-size:2em;font-weight:400;color:#2a1f14}
 #complete-screen .complete-emoji{font-size:4em}
@@ -246,6 +250,7 @@ body.wimhof-blue-bg{
 </style>
 </head>
 <body>
+<div id="viewport-bg" aria-hidden="true"></div>
 
 <!-- MENU -->
 <div id="menu-screen">
@@ -592,6 +597,8 @@ const menuScreen = document.getElementById('menu-screen');
 const practiceSelect = document.getElementById('practice-select');
 const timerScreen = document.getElementById('timer-screen');
 const completeScreen = document.getElementById('complete-screen');
+const viewportBg = document.getElementById('viewport-bg');
+const themeColorMeta = document.getElementById('theme-color-meta');
 const ring1 = document.getElementById('ring1');
 const ring2 = document.getElementById('ring2');
 const ring3 = document.getElementById('ring3');
@@ -603,8 +610,12 @@ function getCurrentVisualTheme() {
 
 function setBodyVisualTheme(theme='') {
   const enabled = theme === 'wimhof-blue';
-  document.body.classList.toggle('wimhof-blue-bg', enabled);
-  document.documentElement.classList.toggle('wimhof-blue-bg', enabled);
+  viewportBg.classList.toggle('wimhof-blue-bg', enabled);
+  document.body.style.backgroundColor = enabled ? '#071f63' : '#F5F0E8';
+  document.documentElement.style.backgroundColor = enabled ? '#071f63' : '#F5F0E8';
+  if (themeColorMeta) {
+    themeColorMeta.setAttribute('content', enabled ? '#071f63' : '#F5F0E8');
+  }
 }
 
 // ===== THEME APPLICATION =====
