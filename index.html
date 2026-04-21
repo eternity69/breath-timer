@@ -28,6 +28,16 @@ body{
   padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   transition:background-color 1s ease, color 0.8s ease;
 }
+body.wimhof-blue-bg{
+  background-image:
+    radial-gradient(circle at 18% 22%, rgba(117,177,255,0.18) 0, rgba(117,177,255,0.08) 10%, transparent 26%),
+    radial-gradient(circle at 82% 28%, rgba(98,149,255,0.14) 0, rgba(98,149,255,0.05) 12%, transparent 28%),
+    radial-gradient(circle at 52% 72%, rgba(67,108,222,0.18) 0, rgba(67,108,222,0.06) 14%, transparent 32%),
+    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.035) 0 2px, transparent 2px 20px),
+    linear-gradient(180deg, rgba(6,27,84,0.92) 0%, rgba(8,41,112,0.96) 48%, rgba(4,25,77,0.98) 100%);
+  background-blend-mode:screen,screen,screen,soft-light,normal;
+  background-size:100% 100%,100% 100%,100% 100%,240px 240px,100% 100%;
+}
 
 /* ===== MENU SCREEN ===== */
 #menu-screen{
@@ -401,7 +411,7 @@ const WIM_HOF_8 = [
   {id:273,name:"Раунд 8 — задержка на выдохе",duration:120,body:"Пустота",hint:"Последняя задержка. Полная неподвижность, полное наблюдение. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:120,exhale:0}},
   {id:274,name:"Раунд 8 — восстановление",duration:20,body:"Вдох",hint:"Глубокий вдох, удержание, спокойный отпуск.",animation:{type:"hold",inhale:5,hold:15,exhale:0}},
   {id:275,name:"Интеграция",duration:180,body:"Интеграция",hint:"Свободное дыхание. Полежи спокойно, не вставай резко. Наблюдай тепло, покой и ясность.",animation:null}
-];
+].map(step => ({ ...step, visualTheme:'wimhof-blue' }));
 
 // Циклическая гипервентиляция с задержкой — короткий протокол
 const HV_RETENTION = [
@@ -582,11 +592,21 @@ const ring2 = document.getElementById('ring2');
 const ring3 = document.getElementById('ring3');
 const ring4 = document.getElementById('ring4');
 
+function getCurrentVisualTheme() {
+  return currentSequence[currentIndex]?.visualTheme || '';
+}
+
+function setBodyVisualTheme(theme='') {
+  document.body.classList.toggle('wimhof-blue-bg', theme === 'wimhof-blue');
+}
+
 // ===== THEME APPLICATION =====
 function applyTheme(phase) {
   currentPhase = phase;
   const c = COLORS[phase] || COLORS.idle;
-  document.body.style.backgroundColor = c.bg;
+  const visualTheme = getCurrentVisualTheme();
+  setBodyVisualTheme(visualTheme);
+  document.body.style.backgroundColor = visualTheme === 'wimhof-blue' ? '#0A2D7A' : c.bg;
   
   if (timerScreen.style.display !== 'none') {
     ring1.style.backgroundColor = c.ring1;
@@ -637,6 +657,7 @@ function showMenu(){
   releaseWakeLock();
   hideAll();
   menuScreen.style.display='flex';
+  setBodyVisualTheme('');
   document.body.style.backgroundColor = COLORS.menu.bg;
   document.body.style.color = '#3c3228';
   document.body.classList.remove('no-scroll');
@@ -645,6 +666,7 @@ function showMenu(){
 function showPracticeSelect(){
   hideAll();
   practiceSelect.style.display='flex';
+  setBodyVisualTheme('');
   document.body.style.backgroundColor = COLORS.menu.bg;
   document.body.classList.remove('no-scroll');
   const list=document.getElementById('practice-list');
@@ -824,6 +846,7 @@ function showComplete(){
   releaseWakeLock();
   hideAll();
   completeScreen.style.display='flex';
+  setBodyVisualTheme('');
   document.body.style.backgroundColor = COLORS.menu.bg;
   const elapsed=Math.round((Date.now()-startTime)/1000);
   document.getElementById('complete-time').textContent=`Время: ${formatTime(elapsed)}`;
