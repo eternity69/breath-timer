@@ -28,6 +28,7 @@ body{
   padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   transition:background-color 1s ease, color 0.8s ease;
 }
+html.wimhof-blue-bg,
 body.wimhof-blue-bg{
   background-color:#071f63;
   background-image:
@@ -597,7 +598,9 @@ function getCurrentVisualTheme() {
 }
 
 function setBodyVisualTheme(theme='') {
-  document.body.classList.toggle('wimhof-blue-bg', theme === 'wimhof-blue');
+  const enabled = theme === 'wimhof-blue';
+  document.body.classList.toggle('wimhof-blue-bg', enabled);
+  document.documentElement.classList.toggle('wimhof-blue-bg', enabled);
 }
 
 // ===== THEME APPLICATION =====
