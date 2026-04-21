@@ -972,6 +972,7 @@ function runAnimation(){
   const label=document.getElementById('breath-label');
   const mantra=document.getElementById('breath-mantra');
   const counter=document.getElementById('phase-counter');
+  const hidePhaseSeconds = (p?.visualTheme === 'wimhof-blue') || (anim?.visualMode === 'wimhof');
 
   if(!anim){
     // No animation — gentle pulse, use inhale color
@@ -997,7 +998,7 @@ function runAnimation(){
       setRingsNoTransition();
       setRingsScale(progress, anim.visualMode);
       label.textContent=anim.inhaleLabel||'Вдох';
-      counter.textContent=Math.ceil(anim.inhale-pos)+'с';
+      counter.textContent=hidePhaseSeconds?'':Math.ceil(anim.inhale-pos)+'с';
       applyTheme('inhale');
       applyVisualModeAppearance(anim.visualMode, 'inhale');
     } else {
@@ -1006,7 +1007,7 @@ function runAnimation(){
       setRingsNoTransition();
       setRingsScale(progress, anim.visualMode);
       label.textContent=anim.exhaleLabel||'Выдох';
-      counter.textContent=Math.ceil(anim.exhale-exPos)+'с';
+      counter.textContent=hidePhaseSeconds?'':Math.ceil(anim.exhale-exPos)+'с';
       applyTheme('exhale');
       applyVisualModeAppearance(anim.visualMode, 'exhale');
     }
@@ -1023,7 +1024,7 @@ function runAnimation(){
       setRingsNoTransition();
       setRingsScale(progress);
       label.textContent='Вдох';
-      counter.textContent=Math.ceil(anim.inhale-pos)+'с';
+      counter.textContent=hidePhaseSeconds?'':Math.ceil(anim.inhale-pos)+'с';
       applyTheme('inhale');
     } else if(pos<anim.inhale+anim.hold || anim.exhale===0){
       // Hold — static with subtle shimmer
@@ -1044,7 +1045,7 @@ function runAnimation(){
       setRingsNoTransition();
       setRingsScale(progress);
       label.textContent='Выдох';
-      counter.textContent=anim.exhale>0?Math.ceil(anim.exhale-exPos)+'с':'';
+      counter.textContent=hidePhaseSeconds?'':(anim.exhale>0?Math.ceil(anim.exhale-exPos)+'с':'');
       applyTheme('exhale');
     }
     mantra.textContent='';
