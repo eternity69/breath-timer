@@ -606,6 +606,8 @@ const ring2 = document.getElementById('ring2');
 const ring3 = document.getElementById('ring3');
 const ring4 = document.getElementById('ring4');
 
+const WIM_HOF_BG_IMAGE = 'radial-gradient(circle at 50% 38%, rgba(48,118,255,0.20) 0%, rgba(22,74,190,0.10) 26%, transparent 56%), linear-gradient(180deg, rgba(8,41,112,0.98) 0%, rgba(7,31,99,0.98) 52%, rgba(4,19,66,1) 100%)';
+
 function getCurrentVisualTheme() {
   return currentSequence[currentIndex]?.visualTheme || '';
 }
@@ -615,6 +617,16 @@ function setBodyVisualTheme(theme='') {
   viewportBg.classList.toggle('wimhof-blue-bg', enabled);
   document.body.style.backgroundColor = enabled ? '#071f63' : '#F5F0E8';
   document.documentElement.style.backgroundColor = enabled ? '#071f63' : '#F5F0E8';
+  document.body.style.backgroundImage = enabled ? WIM_HOF_BG_IMAGE : 'none';
+  document.documentElement.style.backgroundImage = enabled ? WIM_HOF_BG_IMAGE : 'none';
+  document.body.style.backgroundBlendMode = enabled ? 'screen,normal' : 'normal';
+  document.documentElement.style.backgroundBlendMode = enabled ? 'screen,normal' : 'normal';
+  document.body.style.backgroundRepeat = enabled ? 'no-repeat' : 'repeat';
+  document.documentElement.style.backgroundRepeat = enabled ? 'no-repeat' : 'repeat';
+  document.body.style.backgroundPosition = enabled ? 'center center' : 'initial';
+  document.documentElement.style.backgroundPosition = enabled ? 'center center' : 'initial';
+  document.body.style.backgroundSize = enabled ? 'cover' : 'auto';
+  document.documentElement.style.backgroundSize = enabled ? 'cover' : 'auto';
   if (themeColorMeta) {
     themeColorMeta.setAttribute('content', enabled ? '#071f63' : '#F5F0E8');
   }
