@@ -630,12 +630,27 @@ function applyTheme(phase) {
   timerScreen.style.backgroundRepeat = isWimHofTheme ? 'no-repeat' : 'repeat';
   timerScreen.style.backgroundPosition = isWimHofTheme ? 'center center' : 'initial';
   timerScreen.style.backgroundSize = isWimHofTheme ? 'cover' : 'auto';
+  const ringColors = isWimHofTheme
+    ? (phase === 'hold' || phase === 'pause'
+        ? {
+            ring1:'rgba(255, 182, 94, 0.16)',
+            ring2:'rgba(255, 182, 94, 0.24)',
+            ring3:'rgba(255, 182, 94, 0.34)',
+            ring4:'rgba(255, 198, 124, 0.96)'
+          }
+        : {
+            ring1:'rgba(255, 154, 48, 0.12)',
+            ring2:'rgba(255, 154, 48, 0.18)',
+            ring3:'rgba(255, 154, 48, 0.26)',
+            ring4:'rgba(255, 154, 48, 0.98)'
+          })
+    : c;
   
   if (timerScreen.style.display !== 'none') {
-    ring1.style.backgroundColor = c.ring1;
-    ring2.style.backgroundColor = c.ring2;
-    ring3.style.backgroundColor = c.ring3;
-    ring4.style.backgroundColor = c.ring4;
+    ring1.style.backgroundColor = ringColors.ring1;
+    ring2.style.backgroundColor = ringColors.ring2;
+    ring3.style.backgroundColor = ringColors.ring3;
+    ring4.style.backgroundColor = ringColors.ring4;
   }
   
   const ts = document.getElementById('timer-screen');
@@ -646,7 +661,7 @@ function applyTheme(phase) {
   const pbc = document.getElementById('progress-bar-container');
   const pb = document.getElementById('progress-bar');
   
-  if (c.dark) {
+  if (c.dark && !isWimHofTheme) {
     ts.classList.add('dark-text');
     badge.classList.add('dark-text');
     btnReset.classList.add('dark-bg');
@@ -945,8 +960,13 @@ function applyVisualModeAppearance(mode='default', phase='idle') {
     ring2.style.boxShadow = 'none';
     ring3.style.boxShadow = 'none';
 
-    ring4.style.backgroundColor = 'rgba(255, 154, 48, 0.99)';
-    ring4.style.boxShadow = '0 0 34px rgba(255, 154, 48, 0.28), 0 0 12px rgba(255, 214, 148, 0.28) inset';
+    if(phase==='hold' || phase==='pause'){
+      ring4.style.backgroundColor = 'rgba(255, 205, 138, 0.98)';
+      ring4.style.boxShadow = '0 0 42px rgba(255, 170, 80, 0.18), 0 0 18px rgba(255, 228, 176, 0.34) inset';
+    } else {
+      ring4.style.backgroundColor = 'rgba(255, 154, 48, 0.99)';
+      ring4.style.boxShadow = '0 0 34px rgba(255, 154, 48, 0.28), 0 0 12px rgba(255, 214, 148, 0.28) inset';
+    }
     return;
   }
 
@@ -1001,6 +1021,7 @@ function runAnimation(){
   const label=document.getElementById('breath-label');
   const mantra=document.getElementById('breath-mantra');
   const counter=document.getElementById('phase-counter');
+  const activeVisualMode = anim?.visualMode || (p?.visualTheme === 'wimhof-blue' ? 'wimhof' : 'default');
   const hidePhaseSeconds = (p?.visualTheme === 'wimhof-blue') || (anim?.visualMode === 'wimhof');
 
   if(!anim){
@@ -1008,11 +1029,12 @@ function runAnimation(){
     const t=(Date.now()-animStartTime)/1000;
     const s=0.35+0.08*Math.sin(t*0.8);
     setRingsNoTransition();
-    setRingsScale(s);
+    setRingsScale(s, activeVisualMode);
     label.textContent='🧘';
     mantra.textContent='';
     counter.textContent='';
     applyTheme('inhale');
+    applyVisualModeAppearance(activeVisualMode, 'inhale');
     animFrameId=requestAnimationFrame(runAnimation);
     return;
   }
@@ -1025,20 +1047,20 @@ function runAnimation(){
     if(pos<anim.inhale){
       const progress=pos/anim.inhale;
       setRingsNoTransition();
-      setRingsScale(progress, anim.visualMode);
+      setRingsScale(progress, activeVisualMode);
       label.textContent=anim.inhaleLabel||'Вдох';
       counter.textContent=hidePhaseSeconds?'':Math.ceil(anim.inhale-pos)+'с';
       applyTheme('inhale');
-      applyVisualModeAppearance(anim.visualMode, 'inhale');
+      applyVisualModeAppearance(activeVisualMode, 'inhale');
     } else {
       const exPos=pos-anim.inhale;
       const progress=1-exPos/anim.exhale;
       setRingsNoTransition();
-      setRingsScale(progress, anim.visualMode);
+      setRingsScale(progress, activeVisualMode);
       label.textContent=anim.exhaleLabel||'Выдох';
       counter.textContent=hidePhaseSeconds?'':Math.ceil(anim.exhale-exPos)+'с';
       applyTheme('exhale');
-      applyVisualModeAppearance(anim.visualMode, 'exhale');
+      applyVisualModeAppearance(activeVisualMode, 'exhale');
     }
     mantra.textContent='';
   }
@@ -1051,16 +1073,17 @@ function runAnimation(){
     if(anim.inhale>0 && pos<anim.inhale){
       const progress=pos/anim.inhale;
       setRingsNoTransition();
-      setRingsScale(progress);
+      setRingsScale(progress, activeVisualMode);
       label.textContent='Вдох';
       counter.textContent=hidePhaseSeconds?'':Math.ceil(anim.inhale-pos)+'с';
       applyTheme('inhale');
+      applyVisualModeAppearance(activeVisualMode, 'inhale');
     } else if(pos<anim.inhale+anim.hold || anim.exhale===0){
       // Hold — static with subtle shimmer
       const holdElapsed=Math.max(0,pos-anim.inhale);
       const shimmer=1.0+0.02*Math.sin(holdElapsed*3);
       setRingsNoTransition();
-      setRingsScale(shimmer);
+      setRingsScale(shimmer, activeVisualMode);
       label.textContent='Задержка';
       if(isManualHold && elapsed>totalHoldPoint){
         counter.textContent='+'+formatTime(Math.floor(elapsed-totalHoldPoint));
@@ -1068,14 +1091,16 @@ function runAnimation(){
         counter.textContent=Math.ceil(anim.inhale+anim.hold-pos)+'с';
       }
       applyTheme('hold');
+      applyVisualModeAppearance(activeVisualMode, 'hold');
     } else {
       const exPos=pos-anim.inhale-anim.hold;
       const progress=anim.exhale>0?1-exPos/anim.exhale:0;
       setRingsNoTransition();
-      setRingsScale(progress);
+      setRingsScale(progress, activeVisualMode);
       label.textContent='Выдох';
       counter.textContent=hidePhaseSeconds?'':(anim.exhale>0?Math.ceil(anim.exhale-exPos)+'с':'');
       applyTheme('exhale');
+      applyVisualModeAppearance(activeVisualMode, 'exhale');
     }
     mantra.textContent='';
   }
