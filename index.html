@@ -532,7 +532,7 @@ const WIM_HOF_BG_COLOR = '#041342';
 const WIM_HOF_BG_IMAGE = 'radial-gradient(circle at 50% 38%, rgba(48,118,255,0.20) 0%, rgba(22,74,190,0.10) 26%, transparent 56%), linear-gradient(180deg, rgba(8,41,112,0.98) 0%, rgba(7,31,99,0.98) 52%, rgba(4,19,66,1) 100%)';
 
 function getCurrentVisualTheme() {
-  return currentSequence[currentIndex]?.visualTheme || '';
+  return currentSequence[currentIndex]?.visualTheme || 'wimhof-blue';
 }
 
 function setBodyVisualTheme(theme='') {
@@ -927,9 +927,10 @@ function setRingsNoTransition() {
 }
 
 function resetCircles(){
+  const activeVisualMode = getCurrentVisualTheme() === 'wimhof-blue' ? 'wimhof' : 'default';
   setRingsNoTransition();
-  setRingsScale(0.3);
-  applyVisualModeAppearance('default');
+  setRingsScale(0.3, activeVisualMode);
+  applyVisualModeAppearance(activeVisualMode, 'pause');
   document.getElementById('breath-label').textContent='';
   document.getElementById('breath-mantra').textContent='';
   document.getElementById('phase-counter').textContent='';
@@ -1048,18 +1049,20 @@ function runAnimation(){
       const partProgress=(pos%anim.inhalePart)/anim.inhalePart;
       const s=base+step*partProgress;
       setRingsNoTransition();
-      setRingsScale(s);
+      setRingsScale(s, activeVisualMode);
       label.textContent='Вдох';
       counter.textContent=`${partIdx+1}/${anim.inhaleCount}`;
       applyTheme('inhale');
+      applyVisualModeAppearance(activeVisualMode, 'inhale');
     } else {
       const exPos=pos-inhaleDur;
       const progress=1-exPos/anim.exhale;
       setRingsNoTransition();
-      setRingsScale(progress);
+      setRingsScale(progress, activeVisualMode);
       label.textContent='Выдох';
       counter.textContent=Math.ceil(anim.exhale-exPos)+'с';
       applyTheme('exhale');
+      applyVisualModeAppearance(activeVisualMode, 'exhale');
     }
     mantra.textContent='';
   }
@@ -1071,11 +1074,13 @@ function runAnimation(){
     for(const beat of beats){
       if(pos<acc+beat.duration){
         const s=beat.scale==='inhale'?1.0:0.3;
+        const phaseName = beat.scale==='inhale'?'inhale':'exhale';
         setRingsTransition(beat.duration*0.3);
-        setRingsScale(s);
+        setRingsScale(s, activeVisualMode);
         label.textContent=beat.label;
         counter.textContent='';
-        applyTheme(beat.scale==='inhale'?'inhale':'exhale');
+        applyTheme(phaseName);
+        applyVisualModeAppearance(activeVisualMode, phaseName);
         break;
       }
       acc+=beat.duration;
@@ -1091,21 +1096,23 @@ function runAnimation(){
       const partIdx=Math.floor(pos/anim.partDuration);
       const progress=(partIdx+1)/anim.parts;
       setRingsNoTransition();
-      setRingsScale(progress);
+      setRingsScale(progress, activeVisualMode);
       label.textContent='Вдох';
       mantra.textContent=anim.inhaleMantra;
       counter.textContent=`${partIdx+1}/${anim.parts}`;
       applyTheme('inhale');
+      applyVisualModeAppearance(activeVisualMode, 'inhale');
     } else {
       const exPos=pos-inhaleDur;
       const partIdx=Math.floor(exPos/anim.partDuration);
       const progress=1-(partIdx+1)/anim.parts;
       setRingsNoTransition();
-      setRingsScale(progress);
+      setRingsScale(progress, activeVisualMode);
       label.textContent='Выдох';
       mantra.textContent=anim.exhaleMantra;
       counter.textContent=`${partIdx+1}/${anim.parts}`;
       applyTheme('exhale');
+      applyVisualModeAppearance(activeVisualMode, 'exhale');
     }
   }
   else if(anim.type==='fire'){
@@ -1114,11 +1121,12 @@ function runAnimation(){
     const phase=pos%1;
     const s=phase<0.35?phase/0.35:1-(phase-0.35)/0.65;
     setRingsNoTransition();
-    setRingsScale(s);
+    setRingsScale(s, activeVisualMode);
     label.textContent='🔥';
     mantra.textContent='';
     counter.textContent='';
     applyTheme('inhale');
+    applyVisualModeAppearance(activeVisualMode, 'inhale');
   }
 
   animFrameId=requestAnimationFrame(runAnimation);
