@@ -606,6 +606,7 @@ const ring2 = document.getElementById('ring2');
 const ring3 = document.getElementById('ring3');
 const ring4 = document.getElementById('ring4');
 
+const WIM_HOF_BG_COLOR = '#041342';
 const WIM_HOF_BG_IMAGE = 'radial-gradient(circle at 50% 38%, rgba(48,118,255,0.20) 0%, rgba(22,74,190,0.10) 26%, transparent 56%), linear-gradient(180deg, rgba(8,41,112,0.98) 0%, rgba(7,31,99,0.98) 52%, rgba(4,19,66,1) 100%)';
 
 function getCurrentVisualTheme() {
@@ -615,8 +616,8 @@ function getCurrentVisualTheme() {
 function setBodyVisualTheme(theme='') {
   const enabled = theme === 'wimhof-blue';
   viewportBg.classList.toggle('wimhof-blue-bg', enabled);
-  document.body.style.backgroundColor = enabled ? '#071f63' : '#F5F0E8';
-  document.documentElement.style.backgroundColor = enabled ? '#071f63' : '#F5F0E8';
+  document.body.style.backgroundColor = enabled ? WIM_HOF_BG_COLOR : '#F5F0E8';
+  document.documentElement.style.backgroundColor = enabled ? WIM_HOF_BG_COLOR : '#F5F0E8';
   document.body.style.backgroundImage = enabled ? WIM_HOF_BG_IMAGE : 'none';
   document.documentElement.style.backgroundImage = enabled ? WIM_HOF_BG_IMAGE : 'none';
   document.body.style.backgroundBlendMode = enabled ? 'screen,normal' : 'normal';
@@ -628,7 +629,7 @@ function setBodyVisualTheme(theme='') {
   document.body.style.backgroundSize = enabled ? 'cover' : 'auto';
   document.documentElement.style.backgroundSize = enabled ? 'cover' : 'auto';
   if (themeColorMeta) {
-    themeColorMeta.setAttribute('content', enabled ? '#071f63' : '#F5F0E8');
+    themeColorMeta.setAttribute('content', enabled ? WIM_HOF_BG_COLOR : '#F5F0E8');
   }
 }
 
@@ -639,7 +640,7 @@ function applyTheme(phase) {
   const visualTheme = getCurrentVisualTheme();
   const isWimHofTheme = visualTheme === 'wimhof-blue';
   setBodyVisualTheme(visualTheme);
-  const rootBg = isWimHofTheme ? '#0A2D7A' : c.bg;
+  const rootBg = isWimHofTheme ? WIM_HOF_BG_COLOR : c.bg;
   document.body.style.backgroundColor = rootBg;
   document.documentElement.style.backgroundColor = rootBg;
   timerScreen.style.backgroundColor = isWimHofTheme ? 'transparent' : c.bg;
