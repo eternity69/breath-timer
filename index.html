@@ -245,10 +245,6 @@ body{
     <div class="btn-title">🧊 Вим Хоф — 4 раунда</div>
     <div class="btn-desc">35 дыханий → выдох → задержка → восстановительный вдох</div>
   </button>
-  <button class="menu-btn" onclick="startSequence('hv_retention')">
-    <div class="btn-title">🌪️ Гипервентиляция + задержка</div>
-    <div class="btn-desc">Короткий протокол • 4 раунда • частое дыхание + паузы</div>
-  </button>
   <button class="menu-btn" onclick="startSequence('co2_ladder')">
     <div class="btn-title">🫁 CO₂ Лестница</div>
     <div class="btn-desc">Носовое дыхание + мягкие задержки по нарастающей</div>
@@ -395,23 +391,6 @@ const WIM_HOF_8 = [
   {id:262,name:"Раунд 4 — восстановление",duration:18,body:"Вдох",hint:"Один полный вдох, мягко удержи, отпусти.",animation:{type:"hold",inhale:3,hold:15,exhale:0}},
   {id:275,name:"Интеграция",duration:180,body:"Интеграция",hint:"Свободное дыхание. Полежи спокойно, не вставай резко. Наблюдай тепло, покой и ясность.",animation:null}
 ].map(step => ({ ...step, visualTheme:'wimhof-blue' }));
-
-// Циклическая гипервентиляция с задержкой — короткий протокол
-const HV_RETENTION = [
-  {id:1101,name:"Раунд 1 — активное дыхание",duration:60,body:"Раунд 1/4",hint:"30 мощных дыханий. Вдох активный, выдох отпущенный. Без пауз, ровной волной.",animation:{type:"simple",inhale:1.1,exhale:0.9}},
-  {id:1102,name:"Раунд 1 — задержка на выдохе",duration:30,body:"Пустота",hint:"Выдохни и остановись. Расслабь лицо и плечи. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:30,exhale:0}},
-  {id:1103,name:"Раунд 1 — восстановление",duration:20,body:"Вдох",hint:"Один полный вдох, мягкая фиксация, спокойный отпуск.",animation:{type:"hold",inhale:5,hold:15,exhale:0}},
-  {id:1104,name:"Раунд 2 — активное дыхание",duration:60,body:"Раунд 2/4",hint:"Снова 30 дыханий. Чуть глубже, но без насилия. Держи ритм.",animation:{type:"simple",inhale:1.1,exhale:0.9}},
-  {id:1105,name:"Раунд 2 — задержка на выдохе",duration:45,body:"Пустота",hint:"Последний выдох и пауза. Не борись, просто наблюдай. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:45,exhale:0}},
-  {id:1106,name:"Раунд 2 — восстановление",duration:20,body:"Вдох",hint:"Глубокий вдох, короткая фиксация, отпусти.",animation:{type:"hold",inhale:5,hold:15,exhale:0}},
-  {id:1107,name:"Раунд 3 — активное дыхание",duration:60,body:"Раунд 3/4",hint:"Ещё 30 дыханий. Дыхание связное, тело расслаблено, голова ясная.",animation:{type:"simple",inhale:1.1,exhale:0.9}},
-  {id:1108,name:"Раунд 3 — задержка на выдохе",duration:60,body:"Пустота",hint:"Выдохни и останься в тишине. Если хочется вдохнуть раньше, вдыхай. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:60,exhale:0}},
-  {id:1109,name:"Раунд 3 — восстановление",duration:20,body:"Вдох",hint:"Полный вдох, мягко удержи, расслабься.",animation:{type:"hold",inhale:5,hold:15,exhale:0}},
-  {id:1110,name:"Раунд 4 — активное дыхание",duration:70,body:"Раунд 4/4",hint:"Финальный разгон, 35 дыханий. Глубоко, собранно, без лишнего напряжения.",animation:{type:"simple",inhale:1.1,exhale:0.9}},
-  {id:1111,name:"Раунд 4 — задержка на выдохе",duration:75,body:"Пустота",hint:"Последняя пауза. Полная неподвижность. Когда захочешь завершить, нажми кнопку справа.",manualAdvance:true,animation:{type:"hold",inhale:0,hold:75,exhale:0}},
-  {id:1112,name:"Раунд 4 — восстановление",duration:20,body:"Вдох",hint:"Один полный вдох, фиксация, спокойный отпуск.",animation:{type:"hold",inhale:5,hold:15,exhale:0}},
-  {id:1113,name:"Интеграция",duration:120,body:"Интеграция",hint:"Свободное дыхание. Полежи спокойно и не вставай резко.",animation:null}
-];
 
 // CO₂ лестница — мягкие задержки после выдоха
 const CO2_LADDER = [
@@ -703,7 +682,7 @@ function showPracticeSelect(){
   document.body.classList.remove('no-scroll');
   const list=document.getElementById('practice-list');
   list.innerHTML='';
-  const allPractices = [...WIM_HOF_8, ...HV_RETENTION, ...CO2_LADDER, ...BHASTRIKA_INTERVALS, ...ENERGY_BASIC, ...ENERGY_7PHASE, ...SAT_KRIYA_FULL].filter(p=>!p.name.includes('Пауза')&&!p.name.includes('Переход'));
+  const allPractices = [...WIM_HOF_8, ...CO2_LADDER, ...BHASTRIKA_INTERVALS, ...ENERGY_BASIC, ...ENERGY_7PHASE, ...SAT_KRIYA_FULL].filter(p=>!p.name.includes('Пауза')&&!p.name.includes('Переход'));
   allPractices.forEach((p,i)=>{
     const el=document.createElement('div');
     el.className='practice-item';
@@ -725,8 +704,6 @@ function showPracticeSelect(){
 function startSequence(type){
   if(type==='wim_hof_8'){
     currentSequence=[...WIM_HOF_8];
-  } else if(type==='hv_retention'){
-    currentSequence=[...HV_RETENTION];
   } else if(type==='co2_ladder'){
     currentSequence=[...CO2_LADDER];
   } else if(type==='bhastrika_intervals'){
