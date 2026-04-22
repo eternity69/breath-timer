@@ -45,6 +45,17 @@ body{
   background-repeat:no-repeat;
   background-size:cover;
 }
+#safe-area-bottom-fix{
+  position:fixed;left:0;right:0;bottom:0;
+  height:calc(env(safe-area-inset-bottom) + 14px);
+  z-index:2;pointer-events:none;
+  background:transparent;
+  opacity:0;
+}
+#safe-area-bottom-fix.wimhof-blue-bg{
+  opacity:1;
+  background-color:#041342;
+}
 
 /* ===== MENU SCREEN ===== */
 #menu-screen{
@@ -253,6 +264,7 @@ body{
 </head>
 <body>
 <div id="viewport-bg" aria-hidden="true"></div>
+<div id="safe-area-bottom-fix" aria-hidden="true"></div>
 
 <!-- MENU -->
 <div id="menu-screen">
@@ -600,6 +612,7 @@ const practiceSelect = document.getElementById('practice-select');
 const timerScreen = document.getElementById('timer-screen');
 const completeScreen = document.getElementById('complete-screen');
 const viewportBg = document.getElementById('viewport-bg');
+const safeAreaBottomFix = document.getElementById('safe-area-bottom-fix');
 const themeColorMeta = document.getElementById('theme-color-meta');
 const ring1 = document.getElementById('ring1');
 const ring2 = document.getElementById('ring2');
@@ -616,6 +629,7 @@ function getCurrentVisualTheme() {
 function setBodyVisualTheme(theme='') {
   const enabled = theme === 'wimhof-blue';
   viewportBg.classList.toggle('wimhof-blue-bg', enabled);
+  safeAreaBottomFix.classList.toggle('wimhof-blue-bg', enabled);
   document.body.style.backgroundColor = enabled ? WIM_HOF_BG_COLOR : '#F5F0E8';
   document.documentElement.style.backgroundColor = enabled ? WIM_HOF_BG_COLOR : '#F5F0E8';
   document.body.style.backgroundImage = enabled ? WIM_HOF_BG_IMAGE : 'none';
