@@ -930,15 +930,15 @@ const BASE = {
 function setRingsScale(scale, mode='default') {
   // scale: 0 = fully contracted, 1 = fully expanded
   if(mode==='wimhof'){
-    const s = 0.42 + 0.58 * scale;
-    ring1.style.transform = `scale(${s * 1.22})`;
-    ring2.style.transform = `scale(${s * 1.14})`;
-    ring3.style.transform = `scale(${s * 1.07})`;
+    const s = 0.08 + 2.1 * scale;
+    ring1.style.transform = 'scale(0.08)';
+    ring2.style.transform = 'scale(0.08)';
+    ring3.style.transform = 'scale(0.08)';
     ring4.style.transform = `scale(${s})`;
 
-    ring1.style.opacity = String(0.36 + 0.12 * scale);
-    ring2.style.opacity = String(0.46 + 0.14 * scale);
-    ring3.style.opacity = String(0.58 + 0.16 * scale);
+    ring1.style.opacity = '0';
+    ring2.style.opacity = '0';
+    ring3.style.opacity = '0';
     ring4.style.opacity = String(0.92 + 0.08 * scale);
     return;
   }
