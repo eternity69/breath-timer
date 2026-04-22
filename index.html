@@ -625,10 +625,12 @@ function applyTheme(phase) {
   currentPhase = phase;
   const c = COLORS[phase] || COLORS.idle;
   const visualTheme = getCurrentVisualTheme();
+  const isWimHofTheme = visualTheme === 'wimhof-blue';
   setBodyVisualTheme(visualTheme);
-  const rootBg = visualTheme === 'wimhof-blue' ? '#0A2D7A' : c.bg;
+  const rootBg = isWimHofTheme ? '#0A2D7A' : c.bg;
   document.body.style.backgroundColor = rootBg;
   document.documentElement.style.backgroundColor = rootBg;
+  timerScreen.style.backgroundColor = isWimHofTheme ? 'transparent' : c.bg;
   
   if (timerScreen.style.display !== 'none') {
     ring1.style.backgroundColor = c.ring1;
@@ -679,6 +681,7 @@ function showMenu(){
   releaseWakeLock();
   hideAll();
   menuScreen.style.display='flex';
+  menuScreen.style.backgroundColor = COLORS.menu.bg;
   setBodyVisualTheme('');
   document.body.style.backgroundColor = COLORS.menu.bg;
   document.documentElement.style.backgroundColor = COLORS.menu.bg;
@@ -689,6 +692,7 @@ function showMenu(){
 function showPracticeSelect(){
   hideAll();
   practiceSelect.style.display='flex';
+  practiceSelect.style.backgroundColor = COLORS.menu.bg;
   setBodyVisualTheme('');
   document.body.style.backgroundColor = COLORS.menu.bg;
   document.documentElement.style.backgroundColor = COLORS.menu.bg;
@@ -870,6 +874,7 @@ function showComplete(){
   releaseWakeLock();
   hideAll();
   completeScreen.style.display='flex';
+  completeScreen.style.backgroundColor = COLORS.menu.bg;
   setBodyVisualTheme('');
   document.body.style.backgroundColor = COLORS.menu.bg;
   document.documentElement.style.backgroundColor = COLORS.menu.bg;
