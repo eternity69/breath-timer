@@ -957,8 +957,9 @@ function runAnimation(){
   const label=document.getElementById('breath-label');
   const mantra=document.getElementById('breath-mantra');
   const counter=document.getElementById('phase-counter');
-  const activeVisualMode = anim?.visualMode || (p?.visualTheme === 'wimhof-blue' ? 'wimhof' : 'default');
-  const hidePhaseSeconds = (p?.visualTheme === 'wimhof-blue') || (anim?.visualMode === 'wimhof');
+  const resolvedVisualTheme = getCurrentVisualTheme();
+  const activeVisualMode = anim?.visualMode || (resolvedVisualTheme === 'wimhof-blue' ? 'wimhof' : 'default');
+  const hideInnerCounter = activeVisualMode === 'wimhof';
 
   if(!anim){
     // No animation — gentle pulse, use inhale color
@@ -985,7 +986,7 @@ function runAnimation(){
       setRingsNoTransition();
       setRingsScale(progress, activeVisualMode);
       label.textContent=anim.inhaleLabel||'Вдох';
-      counter.textContent=hidePhaseSeconds?'':Math.ceil(anim.inhale-pos)+'с';
+      counter.textContent=hideInnerCounter?'':Math.ceil(anim.inhale-pos)+'с';
       applyTheme('inhale');
       applyVisualModeAppearance(activeVisualMode, 'inhale');
     } else {
@@ -994,7 +995,7 @@ function runAnimation(){
       setRingsNoTransition();
       setRingsScale(progress, activeVisualMode);
       label.textContent=anim.exhaleLabel||'Выдох';
-      counter.textContent=hidePhaseSeconds?'':Math.ceil(anim.exhale-exPos)+'с';
+      counter.textContent=hideInnerCounter?'':Math.ceil(anim.exhale-exPos)+'с';
       applyTheme('exhale');
       applyVisualModeAppearance(activeVisualMode, 'exhale');
     }
@@ -1011,7 +1012,7 @@ function runAnimation(){
       setRingsNoTransition();
       setRingsScale(progress, activeVisualMode);
       label.textContent='Вдох';
-      counter.textContent=hidePhaseSeconds?'':Math.ceil(anim.inhale-pos)+'с';
+      counter.textContent=hideInnerCounter?'':Math.ceil(anim.inhale-pos)+'с';
       applyTheme('inhale');
       applyVisualModeAppearance(activeVisualMode, 'inhale');
     } else if(pos<anim.inhale+anim.hold || anim.exhale===0){
@@ -1019,7 +1020,9 @@ function runAnimation(){
       const holdScale = activeVisualMode==='wimhof' ? 0.72 : 1.0+0.02*Math.sin(Math.max(0,pos-anim.inhale)*3);
       setRingsScale(holdScale, activeVisualMode);
       label.textContent='Задержка';
-      if(isManualHold && elapsed>totalHoldPoint){
+      if(hideInnerCounter){
+        counter.textContent='';
+      } else if(isManualHold && elapsed>totalHoldPoint){
         counter.textContent='+'+formatTime(Math.floor(elapsed-totalHoldPoint));
       } else {
         counter.textContent=Math.ceil(anim.inhale+anim.hold-pos)+'с';
@@ -1032,7 +1035,7 @@ function runAnimation(){
       setRingsNoTransition();
       setRingsScale(progress, activeVisualMode);
       label.textContent='Выдох';
-      counter.textContent=hidePhaseSeconds?'':(anim.exhale>0?Math.ceil(anim.exhale-exPos)+'с':'');
+      counter.textContent=hideInnerCounter?'':(anim.exhale>0?Math.ceil(anim.exhale-exPos)+'с':'');
       applyTheme('exhale');
       applyVisualModeAppearance(activeVisualMode, 'exhale');
     }
@@ -1051,7 +1054,7 @@ function runAnimation(){
       setRingsNoTransition();
       setRingsScale(s, activeVisualMode);
       label.textContent='Вдох';
-      counter.textContent=`${partIdx+1}/${anim.inhaleCount}`;
+      counter.textContent=hideInnerCounter?'':`${partIdx+1}/${anim.inhaleCount}`;
       applyTheme('inhale');
       applyVisualModeAppearance(activeVisualMode, 'inhale');
     } else {
@@ -1060,7 +1063,7 @@ function runAnimation(){
       setRingsNoTransition();
       setRingsScale(progress, activeVisualMode);
       label.textContent='Выдох';
-      counter.textContent=Math.ceil(anim.exhale-exPos)+'с';
+      counter.textContent=hideInnerCounter?'':Math.ceil(anim.exhale-exPos)+'с';
       applyTheme('exhale');
       applyVisualModeAppearance(activeVisualMode, 'exhale');
     }
@@ -1099,7 +1102,7 @@ function runAnimation(){
       setRingsScale(progress, activeVisualMode);
       label.textContent='Вдох';
       mantra.textContent=anim.inhaleMantra;
-      counter.textContent=`${partIdx+1}/${anim.parts}`;
+      counter.textContent=hideInnerCounter?'':`${partIdx+1}/${anim.parts}`;
       applyTheme('inhale');
       applyVisualModeAppearance(activeVisualMode, 'inhale');
     } else {
@@ -1110,7 +1113,7 @@ function runAnimation(){
       setRingsScale(progress, activeVisualMode);
       label.textContent='Выдох';
       mantra.textContent=anim.exhaleMantra;
-      counter.textContent=`${partIdx+1}/${anim.parts}`;
+      counter.textContent=hideInnerCounter?'':`${partIdx+1}/${anim.parts}`;
       applyTheme('exhale');
       applyVisualModeAppearance(activeVisualMode, 'exhale');
     }
